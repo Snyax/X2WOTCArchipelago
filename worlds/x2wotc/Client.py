@@ -7,7 +7,7 @@ import zipfile
 from CommonClient import gui_enabled, logger
 from CommonClient import get_base_parser, handle_url_arg, server_loop
 from MultiServer import mark_raw
-import settings
+from settings import Settings, get_settings
 from Utils import async_start, get_intended_text, open_filename, tuplize_version
 
 # Import Context and CommandProcessor from CommonClient when TrackerClient is not available, or for type checking
@@ -23,6 +23,7 @@ from .EnemyRando import EnemyRandoManager
 from .Items import item_table, item_display_name_to_key
 from .Options import HintResearchProjects
 from .Proxy import run_proxy
+from .Settings import X2WOTCSettings
 from .Version import CLIENT_NAME, GAME_NAME, client_version, client_minimum_mod_version, client_minimum_world_version
 
 from .mods import mods_data, mod_names
@@ -32,7 +33,7 @@ class X2WOTCCommandProcessor(ClientCommandProcessor):
     ctx: "X2WOTCContext"
 
     def _cmd_version(self) -> bool:
-        """Print client version info."""
+        """Print client version info"""
         self.output(f"Client version: {client_version}")
         self.output(f"Minimum world version: {client_minimum_world_version}")
         self.output(f"Minimum mod version: {client_minimum_mod_version}")
@@ -47,7 +48,7 @@ class X2WOTCCommandProcessor(ClientCommandProcessor):
         return True
 
     def _cmd_proxy(self, port: str = "") -> bool:
-        """Start the proxy server with a specific port number."""
+        """Restart the proxy server at the specified port"""
         if port == "":
             self.output(f"Current proxy port: {self.ctx.proxy_port}")
             return False
@@ -68,8 +69,131 @@ class X2WOTCCommandProcessor(ClientCommandProcessor):
         return True
 
     @mark_raw
+    def _cmd_game_path(self, path: str = "") -> bool:
+        """Set the game_path stored in host.yaml"""
+        if path == "":
+            self.output(self.ctx.settings["x2wotc_options"]["game_path"])
+            self.ctx.settings.save()
+            return False
+
+        if self.ctx.connected.is_set():
+            self.output("Cannot set game_path while connected to a slot.")
+            return False
+
+        if not os.path.isdir(path):
+            self.output("Could not set game_path, invalid path given. Note that quotes should not be used.")
+            return False
+
+        self.ctx.settings["x2wotc_options"]["game_path"] = path
+        self.ctx.settings.save()
+        self.output("New game_path saved.")
+        return True
+
+    @mark_raw
+    def _cmd_workshop_path(self, path: str = "") -> bool:
+        """Set the workshop_path stored in host.yaml, you can most likely ignore this"""
+        if path == "":
+            self.output(self.ctx.settings["x2wotc_options"]["workshop_path"])
+            self.ctx.settings.save()
+            return False
+
+        if self.ctx.connected.is_set():
+            self.output("Cannot set workshop_path while connected to a slot.")
+            return False
+
+        if not os.path.isdir(path):
+            self.output("Could not set workshop_path, invalid path given. Note that quotes should not be used.")
+            return False
+
+        self.ctx.settings["x2wotc_options"]["workshop_path"] = path
+        self.ctx.settings.save()
+        self.output("New workshop_path saved.")
+        return True
+
+    def _cmd_reset_paths(self) -> bool:
+        """Reset game_path and workshop_path to their default values"""
+        if self.ctx.connected.is_set():
+            self.output("Cannot reset paths while connected to a slot.")
+            return False
+
+        self.ctx.settings["x2wotc_options"]["game_path"] = X2WOTCSettings.game_path
+        self.ctx.settings["x2wotc_options"]["workshop_path"] = X2WOTCSettings.workshop_path
+        self.ctx.settings.save()
+        self.output("Reset game_path and workshop_path to default values:")
+        self.output(X2WOTCSettings.game_path)
+        self.output(X2WOTCSettings.workshop_path)
+        return True
+
+    def _cmd_mods(self) -> bool:
+        """List all installed and active mods"""
+        if mod_names:
+            self.output("Installed mods:")
+            for mod_name in mod_names:
+                self.output(f"- {mod_name}")
+        else:
+            self.output("No installed mods found.")
+
+        if self.ctx.active_mods:
+            self.output("Active mods:")
+            for mod_name in self.ctx.active_mods:
+                self.output(f"- {mod_name}")
+
+            missing_mods = [mod_name for mod_name in self.ctx.active_mods if mod_name not in mod_names]
+            if missing_mods:
+                self.output("These mods are active but not installed:")
+                for mod_name in missing_mods:
+                    self.output(f"- {mod_name}")
+                self.output("Please use the same apworld that was used to generate the multiworld.")
+        else:
+            self.output("No active mods found.")
+
+        return True
+
+    def _cmd_install_mod(self) -> bool:
+        """Install a mod"""
+        mod_path = open_filename("Select mod file", [("x2wotc mod", [".py", ".zip"])])
+        if not mod_path:
+            self.output("No file selected.")
+            return False
+
+        apworld_path = f"{__file__.split(".apworld")[0]}.apworld"
+        arcname = f"x2wotc/mods/{os.path.basename(mod_path)}"
+        with zipfile.ZipFile(apworld_path, "a") as apworld_file:
+
+            # If the mod is a .py file, add it directly to the archive
+            if mod_path.endswith(".py"):
+                apworld_file.write(mod_path, arcname=arcname)
+
+            # If the mod is a .zip file, extract its contents and add them to the archive
+            if mod_path.endswith(".zip"):
+                with zipfile.ZipFile(mod_path, "r") as mod_zip_file:
+                    for file_name in mod_zip_file.namelist():
+                        arcname = f"x2wotc/mods/{file_name}"
+                        with mod_zip_file.open(file_name) as file:
+                            apworld_file.writestr(arcname, file.read())
+
+        self.output("Mod installed. Please restart the client.")
+        return True
+
+    def _cmd_clear_mods(self) -> bool:
+        """Uninstall all mods"""
+        apworld_path = f"{__file__.split(".apworld")[0]}.apworld"
+        temp_path = f"{apworld_path}.tmp"
+
+        with zipfile.ZipFile(apworld_path, "r") as apworld_file:
+            with zipfile.ZipFile(temp_path, "w") as temp_file:
+                for file_name in apworld_file.namelist():
+                    if not file_name.startswith("x2wotc/mods/") or file_name == "x2wotc/mods/__init__.py":
+                        with apworld_file.open(file_name) as file:
+                            temp_file.writestr(file_name, file.read())
+        os.replace(temp_path, apworld_path)
+
+        self.output("All mods uninstalled. Please restart the client.")
+        return True
+
+    @mark_raw
     def _cmd_stages(self, progressive_item: str = "") -> bool:
-        """Print progressive item stages."""
+        """Print progressive item stages"""
         progressive_items = [
             item_data.display_name
             for item_data in item_table.values()
@@ -100,79 +224,14 @@ class X2WOTCCommandProcessor(ClientCommandProcessor):
             self.output(f"- {stage_name}")
         return True
 
-    def _cmd_mods(self) -> bool:
-        """List all installed and active mods."""
-        if mod_names:
-            self.output("Installed mods:")
-            for mod_name in mod_names:
-                self.output(f"- {mod_name}")
-        else:
-            self.output("No installed mods found.")
-
-        if self.ctx.active_mods:
-            self.output("Active mods:")
-            for mod_name in self.ctx.active_mods:
-                self.output(f"- {mod_name}")
-
-            missing_mods = [mod_name for mod_name in self.ctx.active_mods if mod_name not in mod_names]
-            if missing_mods:
-                self.output("These mods are active but not installed:")
-                for mod_name in missing_mods:
-                    self.output(f"- {mod_name}")
-                self.output("Please use the same apworld that was used to generate the multiworld.")
-        else:
-            self.output("No active mods found.")
-
-        return True
-
-    def _cmd_install_mod(self) -> bool:
-        """Install a mod. Never install mods from untrusted sources and without prior inspection."""
-        mod_path = open_filename("Select mod file", [("x2wotc mod", [".py", ".zip"])])
-        if not mod_path:
-            self.output("No file selected.")
-            return False
-
-        apworld_path = f"{__file__.split(".apworld")[0]}.apworld"
-        arcname = f"x2wotc/mods/{os.path.basename(mod_path)}"
-        with zipfile.ZipFile(apworld_path, "a") as apworld_file:
-
-            # If the mod is a .py file, add it directly to the archive
-            if mod_path.endswith(".py"):
-                apworld_file.write(mod_path, arcname=arcname)
-
-            # If the mod is a .zip file, extract its contents and add them to the archive
-            if mod_path.endswith(".zip"):
-                with zipfile.ZipFile(mod_path, "r") as mod_zip_file:
-                    for file_name in mod_zip_file.namelist():
-                        arcname = f"x2wotc/mods/{file_name}"
-                        with mod_zip_file.open(file_name) as file:
-                            apworld_file.writestr(arcname, file.read())
-
-        self.output("Mod installed. Please restart the client.")
-        return True
-
-    def _cmd_clear_mods(self) -> bool:
-        """Uninstall all mods."""
-        apworld_path = f"{__file__.split(".apworld")[0]}.apworld"
-        temp_path = f"{apworld_path}.tmp"
-
-        with zipfile.ZipFile(apworld_path, "r") as apworld_file:
-            with zipfile.ZipFile(temp_path, "w") as temp_file:
-                for file_name in apworld_file.namelist():
-                    if not file_name.startswith("x2wotc/mods/") or file_name == "x2wotc/mods/__init__.py":
-                        with apworld_file.open(file_name) as file:
-                            temp_file.writestr(file_name, file.read())
-        os.replace(temp_path, apworld_path)
-
-        self.output("All mods uninstalled. Please restart the client.")
-        return True
-
 
 class X2WOTCContext(CommonContext):
     command_processor = X2WOTCCommandProcessor
     game = GAME_NAME
     items_handling = 0b111  # full remote
     tags = {"AP"}
+
+    settings: Settings = get_settings()
 
     class DualEvent:
         def __init__(self):
@@ -335,7 +394,8 @@ class X2WOTCContext(CommonContext):
 
         # Check for the mod config file in possible manual installation locations first,
         # then fall back to the default Steam workshop installation path if it doesn't exist
-        game_path: str = settings.get_settings()["x2wotc_options"]["game_path"]
+        game_path: str = self.settings["x2wotc_options"]["game_path"]
+        self.settings.save()
         for manual_ext in manual_exts:
             self.config_file = game_path + manual_ext
             if os.path.isfile(self.config_file):
@@ -346,14 +406,17 @@ class X2WOTCContext(CommonContext):
 
         # If this also fails, ask for a potential foreign Steam workshop path
         if not os.path.isfile(self.config_file):
-            workshop_path: str = settings.get_settings()["x2wotc_options"]["workshop_path"]
+            workshop_path: str = self.settings["x2wotc_options"]["workshop_path"]
+            self.settings.save()
             self.config_file = workshop_path + workshop_ext
 
         # If this STILL fails, give up and print an error
         if not os.path.isfile(self.config_file):
             self.print_error(
                 "Config file not found in game folder or Steam workshop folder. "
-                "Please check the game_path setting in your host.yaml and make sure the mod is installed."
+                "Please check and/or correct the game_path setting in your host.yaml "
+                "or by using the /game_path client command "
+                "and make sure the Archipelago game mod is installed."
             )
             return False
 
