@@ -3,7 +3,7 @@
 ## How To
 
 0. Unsubscribe from the [Steam Workshop release of this mod](https://steamcommunity.com/sharedfiles/filedetails/?id=3281191663) if you haven't already.
-1. Download the [correct version](https://github.com/MaxReinstadler/WOTCArchipelago/releases) of the mod as `WOTCArchipelago.zip`.
+1. Download the [correct version](https://github.com/Snyax/WOTCArchipelago/releases) of the mod as `WOTCArchipelago.zip`.
 2. Right-click `XCOM 2` in Steam and navigate to `Manage > Browse Local Files`.
 3. Unzip the downloaded folder into `/steamapps/common/XCOM 2/XCom2-WarOfTheChosen/XComGame/Mods`.
     - Create the `Mods` folder if it doesn't already exist.

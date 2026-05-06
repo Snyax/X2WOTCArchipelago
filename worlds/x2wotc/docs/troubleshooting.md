@@ -16,7 +16,7 @@ Check if the mod is actually loaded by looking for the version text in the botto
 
 ### Request Timed Out
 
-1. Make sure the XCOM 2 WotC AP Client (which is included in the [APWorld](https://github.com/MaxReinstadler/X2WOTCArchipelago/releases)) is running and connected to your slot in the multiworld server, then restart the game. Refer to the [Setup Guide](https://github.com/MaxReinstadler/X2WOTCArchipelago/blob/main/worlds/x2wotc/docs/setup_en.md) for further instructions.
+1. Make sure the XCOM 2 WotC AP Client (which is included in the [APWorld](https://github.com/Snyax/X2WOTCArchipelago/releases)) is running and connected to your slot in the multiworld server, then restart the game. Refer to the [Setup Guide](https://github.com/Snyax/X2WOTCArchipelago/blob/main/worlds/x2wotc/docs/setup_en.md) for further instructions.
 2. It may be that the default proxy port doesn't work for you. Inspect or change the setting via the `/proxy` client command, then restart your game.
 
 ### Client Disconnected

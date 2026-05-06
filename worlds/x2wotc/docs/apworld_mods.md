@@ -25,7 +25,7 @@ The most notable currently available APWorld mod is for Long War of the Chosen, 
 
 ## Adding Mods
 
-Creating a new APWorld mod involves writing APWorld code and requires Python fundamentals, a rough familiarity with the structure of an APWorld, and, ultimately, a more intimate familiarity with the structure of this particular APWorld. To get started on the last point, check out the entire APWorld code [here](https://github.com/MaxReinstadler/X2WOTCArchipelago/tree/main/worlds/x2wotc)!
+Creating a new APWorld mod involves writing APWorld code and requires Python fundamentals, a rough familiarity with the structure of an APWorld, and, ultimately, a more intimate familiarity with the structure of this particular APWorld. To get started on the last point, check out the entire APWorld code [here](https://github.com/Snyax/X2WOTCArchipelago/tree/main/worlds/x2wotc)!
 
 The `mods` folder contains code for the three functional APWorld mods listed above, as well as a lightly commented blueprint in `mods/example`. See the Flame Viper and Muton Destroyer implementations for minimal working examples, then check out LWOTC for some more advanced ideas.
 

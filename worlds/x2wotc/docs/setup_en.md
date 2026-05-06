@@ -4,9 +4,9 @@
 
 - [XCOM 2](https://store.steampowered.com/app/268500/XCOM_2/) with the [War of the Chosen DLC](https://store.steampowered.com/app/593380/XCOM_2_War_of_the_Chosen/) installed through Steam
 - [XCOM 2 WotC Archipelago Mod](https://steamcommunity.com/sharedfiles/filedetails/?id=3281191663)
-    - Files for [manual installation](https://github.com/MaxReinstadler/X2WOTCArchipelago/blob/main/worlds/x2wotc/docs/mod_manual_installation.md) available [here](https://github.com/MaxReinstadler/WOTCArchipelago/releases)
+    - Files for [manual installation](https://github.com/Snyax/X2WOTCArchipelago/blob/main/worlds/x2wotc/docs/mod_manual_installation.md) available [here](https://github.com/Snyax/WOTCArchipelago/releases)
 - [Archipelago](https://github.com/ArchipelagoMW/Archipelago/releases)
-- [XCOM 2 WotC APWorld](https://github.com/MaxReinstadler/X2WOTCArchipelago/releases)
+- [XCOM 2 WotC APWorld](https://github.com/Snyax/X2WOTCArchipelago/releases)
 
 ## Optional Software
 
@@ -27,7 +27,7 @@
 ### XCOM 2 WotC AP Client
 
 1. Download and install the latest [Archipelago](https://github.com/ArchipelagoMW/Archipelago/releases) release.
-2. Download the latest release of the [XCOM 2 WotC APWorld](https://github.com/MaxReinstadler/X2WOTCArchipelago/releases). Double-click it to install automatically, or copy it to your Archipelago installation's `custom_worlds` folder manually.
+2. Download the latest release of the [XCOM 2 WotC APWorld](https://github.com/Snyax/X2WOTCArchipelago/releases). Double-click it to install automatically, or copy it to your Archipelago installation's `custom_worlds` folder manually.
 3. **(Optional)** Download the latest release of the [Universal Tracker APWorld](https://github.com/FarisTheAncient/Archipelago/releases). Double-click it to install automatically, or copy it to your Archipelago installation's `custom_worlds` folder manually.
 4. Launch the XCOM 2 War of the Chosen AP Client from the Archipelago Launcher.
     - Upon first launch, you will be prompted to provide your XCOM 2 installation path. See more info under [Joining a Multiworld](#joining-a-multiworld).
@@ -36,8 +36,8 @@
 
 1. Follow the general [Archipelago Guide](https://archipelago.gg/tutorial/Archipelago/setup/en) for generating and hosting a Multiworld.
     - Multiworld will have to be generated locally but can be hosted on the website.
-    - [APWorld](https://github.com/MaxReinstadler/X2WOTCArchipelago/releases) can be found on GitHub.
-    - [Options Template](https://github.com/MaxReinstadler/X2WOTCArchipelago/releases) can be generated with the 'Generate Template Options' button in the Archipelago Launcher, or found on GitHub.
+    - [APWorld](https://github.com/Snyax/X2WOTCArchipelago/releases) can be found on GitHub.
+    - [Options Template](https://github.com/Snyax/X2WOTCArchipelago/releases) can be generated with the 'Generate Template Options' button in the Archipelago Launcher, or found on GitHub.
 
 ## Joining a Multiworld
 
