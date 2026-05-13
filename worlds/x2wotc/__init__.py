@@ -190,24 +190,24 @@ class X2WOTCWorld(World):
                     self.loc_manager.disable_location(loc_name)
 
         # Disable/enable Chosen Huntsanity
-        if self.options.chosen_hunt_sanity.value == ChosenHuntSanity.option_off:
+        if self.options.chosen_hunt_sanity == ChosenHuntSanity.option_off:
             for loc_name, loc_data in self.loc_manager.location_table.items():
                 if "chosen_hunt" in loc_data.tags:
                     self.loc_manager.disable_location(loc_name)
         else:
-            progressive = self.options.chosen_hunt_sanity.value == ChosenHuntSanity.option_progressive
+            progressive = self.options.chosen_hunt_sanity == ChosenHuntSanity.option_progressive
             self.item_manager.enable_chosen_hunt_items(progressive)
 
         # Shuffle enemies
         if self.options.enemy_rando:
-            if self.options.enemy_plando_preset.value == EnemyPlandoPreset.option_advent_only:
+            if self.options.enemy_plando_preset == EnemyPlandoPreset.option_advent_only:
                 self.options.enemy_plando.value = {"forced": [], "fixed": [
                     enemy_name for enemy_name in self.enemy_rando_manager.enemy_names
                     if not enemy_name.startswith("Adv")
                 ]}
-            elif self.options.enemy_plando_preset.value == EnemyPlandoPreset.option_aliens_only:
+            elif self.options.enemy_plando_preset == EnemyPlandoPreset.option_aliens_only:
                 self.options.enemy_plando.value = {"forced": [], "fixed": ["Adv"]}
-            elif self.options.enemy_plando_preset.value == EnemyPlandoPreset.option_separate:
+            elif self.options.enemy_plando_preset == EnemyPlandoPreset.option_separate:
                 self.options.enemy_plando.value = {"forced": [[["Adv"], ["Adv"]]], "fixed": []}
             self.enemy_rando_manager.shuffle_enemies(self.options.enemy_plando, self.random)
 
