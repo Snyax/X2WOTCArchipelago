@@ -99,10 +99,10 @@ class X2WOTCWorld(World):
         # Disable inactive mods
         for mod_data in mods_data:
             if mod_data.name not in self.options.active_mods:
-                for item_name, item_data in mod_data.items.items():
-                    self.item_manager.disable_item(item_name)
                 for loc_name, loc_data in mod_data.locations.items():
                     self.loc_manager.disable_location(loc_name)
+                for item_name, item_data in mod_data.items.items():
+                    self.item_manager.disable_item(item_name)
 
         # Disable contact techs
         # This always happens for now, while I haven't committed to MCO-ing XComHQ
