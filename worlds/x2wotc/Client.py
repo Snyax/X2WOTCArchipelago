@@ -502,7 +502,7 @@ class X2WOTCContext(CommonContext):
         AUTO_CODE_END = "; MOD ENTRIES END\n"
 
         with open(self.config_file, "r") as file:
-            config = file.read()
+            config: str = file.read()
 
         insert_dict = {
             line[len(CLASS_PREFIX):-len(CLASS_SUFFIX)]: ""
