@@ -64,8 +64,7 @@ class X2WOTCCommandProcessor(ClientCommandProcessor):
             return False
 
         self.ctx.proxy_port = port
-        self.ctx.start_proxy()
-        self.output("Config updated. Please restart your game if it is already running.")
+        async_start(self.ctx.start_proxy())
         return True
 
     @mark_raw
@@ -261,6 +260,7 @@ class X2WOTCContext(CommonContext):
 
     proxy_port: int
     proxy_task: asyncio.Task | None
+    proxy_started: DualEvent
 
     slot_data: dict[str, Any]
     active_mods: list[str]
@@ -282,8 +282,9 @@ class X2WOTCContext(CommonContext):
         self.connected = self.DualEvent()
         self.scouted = self.DualEvent()
 
-        self.proxy_port = 24728
+        self.proxy_port = 0
         self.proxy_task = None
+        self.proxy_started = self.DualEvent()
 
         self.slot_data = {}
         self.active_mods = []
@@ -488,12 +489,15 @@ class X2WOTCContext(CommonContext):
         else:
             logger.info(text)
 
-    def start_proxy(self):
+    async def start_proxy(self):
         if self.proxy_task:
             self.proxy_task.cancel()
+            self.proxy_started.clear()
         self.proxy_task = asyncio.create_task(run_proxy(self), name="proxy")
+        await self.proxy_started.wait()
         if self.connected.is_set():
             self.update_config({"ProxyPort": str(self.proxy_port)})
+            self.print_info("Config updated. Please restart your game if it is already running.")
 
     def patch_config(self):
         CLASS_PREFIX = "[WOTCArchipelago."
@@ -582,6 +586,7 @@ class X2WOTCContext(CommonContext):
             "ClientVersion": "",
             "MinimumModVersion": "",
             "WorldVersion": "",
+            "ProxyPort": "0",
             "DEF_AP_GEN_ID": "",
         })
 
@@ -653,11 +658,12 @@ def launch(*args):
     async def main(args):
         ctx = X2WOTCContext(args.connect, args.password)
         ctx.server_task = asyncio.create_task(server_loop(ctx), name="server_loop")
-        ctx.start_proxy()
 
         if gui_enabled:
             ctx.run_gui()
         ctx.run_cli()
+
+        await ctx.start_proxy()
 
         await ctx.exit_event.wait()
         await ctx.proxy_task

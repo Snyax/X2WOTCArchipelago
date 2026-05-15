@@ -299,8 +299,6 @@ async def handle_tick_tactical(request: web.Request):
 async def run_proxy(local_ctx: "X2WOTCContext"):
     global ctx
     ctx = local_ctx
-
-    address = ("localhost", ctx.proxy_port)
     
     app = web.Application()
     app.router.add_get("/Tick/Strategy/{tail:[0-9]+}", handle_tick_strategy)
@@ -310,10 +308,12 @@ async def run_proxy(local_ctx: "X2WOTCContext"):
 
     runner = web.AppRunner(app)
     await runner.setup()
-    site = web.TCPSite(runner, address[0], address[1])
+    site = web.TCPSite(runner, "127.0.0.1", ctx.proxy_port)
     await site.start()
 
-    ctx.print_info(f"Proxy: Server started at {address[0]}:{address[1]}")
+    ctx.proxy_port = int(site._server.sockets[0].getsockname()[1])
+    ctx.print_info(f"Proxy: Server started at localhost:{ctx.proxy_port}")
+    ctx.proxy_started.set()
 
     scout_task = asyncio.create_task(scout_loop(), name="scout_loop")
 
