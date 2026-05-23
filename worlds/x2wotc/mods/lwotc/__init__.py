@@ -362,6 +362,18 @@ config: dict[str, str] = {
         +CheckUseItems=RedscreenRounds
         +CheckUseItems=NeedleRounds
         +CheckUseItems=FalconRounds
+
+        +CheckUseItemExcludeAbilities=Suppression_LW
+        +CheckUseItemIncludeAbilities=SuppressionShot_LW
+        +CheckUseItemExcludeAbilities=AreaSuppression
+        +CheckUseItemIncludeAbilities=AreaSuppressionShot_LW
+        +CheckUseItemExcludeAbilities=LeadTheTarget_LW
+        +CheckUseItemIncludeAbilities=LeadTheTargetShot_LW
+        +CheckUseItemExcludeAbilities=Stock_LW_Bsc_Ability
+        +CheckUseItemExcludeAbilities=Stock_LW_Adv_Ability
+        +CheckUseItemExcludeAbilities=Stock_LW_Sup_Ability
+        +CheckUseItemExcludeAbilities=Gunslinger
+        +CheckUseItemIncludeAbilities=GunslingerShot
         """
     )
 }
