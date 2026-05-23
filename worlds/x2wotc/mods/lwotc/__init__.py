@@ -348,6 +348,14 @@ config: dict[str, str] = {
         +CheckUseItems=GasGrenadeMk2
         +CheckUseItems=FirebombMk2
         +CheckUseItems=AcidGrenadeMk2
+        +CheckUseItemCategories=(CategoryName=ShredderGun, \\
+            Members[0]=ShredderGun, \\
+            Members[1]=ShredstormCannon \\
+        )
+        +CheckUseItemCategories=(CategoryName=PrototypePlasmaBlaster, \\
+            Members[0]=PrototypePlasmaBlaster, \\
+            Members[1]=PlasmaBlaster \\
+        )
         +CheckUseItems=PrototypePlasmaBlaster
         +CheckUseItems=PlasmaBlaster
         +CheckUseItems=ShredderGun
