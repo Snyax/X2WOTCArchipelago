@@ -333,29 +333,14 @@ config: dict[str, str] = {
     "X2Effect_ItemUseCheck": dedent(
         r"""
         +CheckUseItems=ShapedCharge
-        +CheckUseItemCategories=(CategoryName=GasGrenade, \\
-            Members[0]=GasGrenade, \\
-            Members[1]=GasGrenadeMk2 \\
-        )
-        +CheckUseItemCategories=(CategoryName=Firebomb, \\
-            Members[0]=Firebomb, \\
-            Members[1]=FirebombMk2 \\
-        )
-        +CheckUseItemCategories=(CategoryName=AcidGrenade, \\
-            Members[0]=AcidGrenade, \\
-            Members[1]=AcidGrenadeMk2 \\
-        )
+        +CheckUseItemCategories=(CategoryName=GasGrenade, Members[0]=GasGrenadeMk2)
+        +CheckUseItemCategories=(CategoryName=Firebomb, Members[0]=FirebombMk2)
+        +CheckUseItemCategories=(CategoryName=AcidGrenade, Members[0]=AcidGrenadeMk2)
         +CheckUseItems=GasGrenadeMk2
         +CheckUseItems=FirebombMk2
         +CheckUseItems=AcidGrenadeMk2
-        +CheckUseItemCategories=(CategoryName=ShredderGun, \\
-            Members[0]=ShredderGun, \\
-            Members[1]=ShredstormCannon \\
-        )
-        +CheckUseItemCategories=(CategoryName=PrototypePlasmaBlaster, \\
-            Members[0]=PrototypePlasmaBlaster, \\
-            Members[1]=PlasmaBlaster \\
-        )
+        +CheckUseItemCategories=(CategoryName=ShredderGun, Members[0]=ShredstormCannon)
+        +CheckUseItemCategories=(CategoryName=PrototypePlasmaBlaster, Members[0]=PlasmaBlaster)
         +CheckUseItems=PrototypePlasmaBlaster
         +CheckUseItems=PlasmaBlaster
         +CheckUseItems=ShredderGun
