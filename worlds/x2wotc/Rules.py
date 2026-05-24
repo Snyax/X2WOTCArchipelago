@@ -10,17 +10,21 @@ if TYPE_CHECKING:
     from .Items import ItemManager
     from .Locations import LocationManager
     from .Options import X2WOTCOptions
-from .ItemData import GOAL_VALUE_TO_ITEM
 
 
-# Cache per-state current power values
+# Cache per-player current power values to update on world.collect/remove
 class X2WOTCState(LogicMixin):
-    x2wotc_power_stale: dict[int, bool]
     x2wotc_power_cache: dict[int, float]
+    x2wotc_power_valid: dict[int, bool]
 
-    def init_mixin(self, _):
-        self.x2wotc_power_stale = defaultdict(lambda: True)
+    def init_mixin(self, _: MultiWorld):
         self.x2wotc_power_cache = defaultdict(lambda: 0.0)
+        self.x2wotc_power_valid = defaultdict(lambda: False)
+
+    def copy_mixin(self, other: CollectionState) -> CollectionState:
+        other.x2wotc_power_cache = self.x2wotc_power_cache.copy()
+        other.x2wotc_power_valid = self.x2wotc_power_valid.copy()
+        return other
 
 
 class RuleManager:
@@ -38,11 +42,11 @@ class RuleManager:
             for loc_name in self.loc_manager.location_table.keys()
         }
 
-        # Compile all items that could affect power
-        self.power_items: set[str] = {
-            item_data.display_name
-            for item_data in self.item_manager.item_table.values()
-            if item_data.power > 0.0 or item_data.stages is not None
+        # Compile promotion items for human soldier classes
+        self.human_rank_items: set[str] = {
+            item_name
+            for item_name, item_data in self.item_manager.item_table.items()
+            if item_data.type == "Promotion" and "spark" not in item_data.tags
         }
 
     #==================================================================================================================#
@@ -50,15 +54,7 @@ class RuleManager:
     #------------------------------------------------------------------------------------------------------------------#
 
     def get_item_count(self, state: CollectionState, item: str) -> int:
-        total_count = 0
-        for display_name, count in state.prog_items[self.player].items():
-            item_key = self.item_manager.item_display_name_to_key[display_name]
-            item_data = self.item_manager.item_table[item_key]
-            if item_key == item:
-                total_count += count
-            elif item_data.stages is not None:
-                total_count += item_data.stages[:count].count(item)
-        return total_count
+        return state.count(self.item_manager.item_table[item].display_name, self.player)
 
     def has_item_or_impossible(self, state: CollectionState, item: str, count: int = 1) -> bool:
         return (self.get_item_count(state, item) >= count
@@ -82,13 +78,12 @@ class RuleManager:
     #------------------------------------------------------------------------------------------------------------------#
 
     def get_current_power(self, state: CollectionState) -> float:
-        if state.x2wotc_power_stale[self.player]:
+        if not state.x2wotc_power_valid[self.player]:
             state.x2wotc_power_cache[self.player] = sum([
                 self.item_manager.get_item_power(self.item_manager.item_display_name_to_key[display_name], count)
                 for display_name, count in state.prog_items[self.player].items()
             ])
-            state.x2wotc_power_stale[self.player] = False
-
+            state.x2wotc_power_valid[self.player] = True
         return state.x2wotc_power_cache[self.player]
 
     def can_reasonably_reach(self, state: CollectionState, location: str) -> bool:
@@ -97,6 +92,20 @@ class RuleManager:
 
     def get_power_rule(self, location: str) -> Callable[[CollectionState], bool]:
         return lambda state: self.can_reasonably_reach(state, location)
+
+    #==================================================================================================================#
+    #                                             RANKSANITY HELPERS                                                   #
+    #------------------------------------------------------------------------------------------------------------------#
+
+    def has_human_soldier_rank(self, state: CollectionState, rank: int) -> bool:
+        if not self.options.rank_sanity.all_humans_included():
+            return True
+
+        for human_rank_item in self.human_rank_items:
+            if self.get_item_count(state, human_rank_item) >= rank - 1:
+                return True
+
+        return False
 
     #==================================================================================================================#
     #                                             STORY RULE HELPERS                                                   #
@@ -279,7 +288,7 @@ class RuleManager:
 
     # Victory
     def has_won(self, state: CollectionState) -> bool:
-        return self.has_item_or_impossible(state, GOAL_VALUE_TO_ITEM[self.options.goal.value])
+        return self.has_item_or_impossible(state, self.options.goal.as_event())
 
     #==================================================================================================================#
     #                                                 SET RULES                                                        #
@@ -350,11 +359,6 @@ class RuleManager:
             if "defeat_warlock" in loc_data.tags:
                 add_rule(location, lambda state: self.can_defeat_warlock(state))
 
-            for tag, value in [(f"influence:{i}", i) for i in range(7)]:
-                if tag in loc_data.tags:
-                    influence_rule = self.get_item_count_rule("FactionInfluence", value)
-                    add_rule(location, influence_rule)
-
             if loc_name == "Stronghold1":
                 add_rule(location, lambda state: self.can_defeat_one_chosen(state))
 
@@ -379,8 +383,20 @@ class RuleManager:
 
             for tag in loc_data.tags:
                 if tag.startswith("item:"):
-                    requirement_rule = self.get_item_count_rule(tag[5:], 1)
+                    data = tag[5:].split(":") + [1]
+                    requirement_rule = self.get_item_count_rule(data[0], int(data[1]))
                     add_rule(location, requirement_rule)
+
+            #--------------------------------------- Ranksanity rules -------------------------------------------------#
+            #----------------------------------------------------------------------------------------------------------#
+            if loc_name.startswith("ChosenHuntPt1"):
+                add_rule(location, lambda state: self.has_human_soldier_rank(state, 3))
+
+            if loc_name.startswith("ChosenHuntPt2"):
+                add_rule(location, lambda state: self.has_human_soldier_rank(state, 4))
+
+            if loc_name.startswith("ChosenHuntPt3"):
+                add_rule(location, lambda state: self.has_human_soldier_rank(state, 6))
 
             #----------------------------------------------------------------------------------------------------------#
             #------------------------- See ./Regions.py for entrance access rules -------------------------------------#

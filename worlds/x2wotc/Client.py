@@ -21,7 +21,7 @@ if TYPE_CHECKING:
 
 from .EnemyRando import EnemyRandoManager
 from .Items import item_table, item_display_name_to_key
-from .Options import HintResearchProjects
+from .Options import HintResearchProjects, RankSanity
 from .Proxy import run_proxy
 from .Settings import X2WOTCSettings
 from .Version import CLIENT_NAME, GAME_NAME, client_version, client_minimum_mod_version, client_minimum_world_version
@@ -540,6 +540,8 @@ class X2WOTCContext(CommonContext):
     def update_config(self, config_values: dict[str, str] = {}):
         if not config_values:
             campaign_completion_requirements = self.slot_data.get("campaign_completion_requirements", [])
+            rank_sanity = self.slot_data.get("rank_sanity", RankSanity.default)
+            global_promotions = self.slot_data.get("global_promotions", False)
             hint_research_projects = self.slot_data.get("hint_research_projects", HintResearchProjects.default)
             skip_mission_types = self.slot_data.get("skip_mission_types", [])
             disable_covert_action_risks = self.slot_data.get("disable_covert_action_risks", [])
@@ -551,6 +553,14 @@ class X2WOTCContext(CommonContext):
                 "bRequirePsiGate": str("PsiGateObjective" in campaign_completion_requirements),
                 "bRequireStasisSuit": str("StasisSuitObjective" in campaign_completion_requirements),
                 "bRequireAvatarCorpse": str("AvatarCorpseObjective" in campaign_completion_requirements),
+                "bEnableRanksanity": str(rank_sanity != RankSanity.option_none or global_promotions),
+                "bDisableFactionSoldierClasses": str(not global_promotions
+                                                     and (rank_sanity == RankSanity.option_base_classes_only
+                                                          or rank_sanity == RankSanity.option_no_faction_heroes)),
+                "bDisableSLGSoldierClasses": str(not global_promotions
+                                                 and (rank_sanity == RankSanity.option_base_classes_only
+                                                      or rank_sanity == RankSanity.option_no_spark
+                                                      or not self.slot_data.get("shens_last_gift_dlc", False))),
                 "bRemoveCorpseCosts": str(self.slot_data.get("remove_corpse_costs", False)),
                 "DEF_AP_GEN_ID": f"{"".join(self.slot_data["seed_name"].split())}_{self.slot_data["player"]}",
                 "DEF_HINT_TECH_LOC_PART": str(hint_research_projects == HintResearchProjects.option_partial),

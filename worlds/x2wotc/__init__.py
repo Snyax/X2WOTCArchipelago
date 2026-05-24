@@ -10,10 +10,8 @@ from worlds.LauncherComponents import launch as launch_component
 
 from .EnemyRando import EnemyRandoManager
 from .Items import ItemManager, X2WOTCItem, item_display_name_to_id, item_groups
-from .LocationData import GOAL_VALUE_TO_LOCATION
 from .Locations import LocationManager, loc_display_name_to_id, loc_groups
-from .Options import AlienHuntersDLC, ChosenHuntSanity, ChosenWeaponFragments, EnemyPlandoPreset, X2WOTCOptions
-from .Options import x2wotc_option_groups
+from .Options import X2WOTCOptions, x2wotc_option_groups
 from .Regions import RegionManager
 from .Rules import RuleManager
 from .Settings import X2WOTCSettings
@@ -61,7 +59,7 @@ class X2WOTCWorld(World):
 
     settings: ClassVar[X2WOTCSettings]
     options_dataclass = X2WOTCOptions
-    options: X2WOTCOptions
+    options: options_dataclass
 
     option_names = [
         attr.name for attr in dataclasses.fields(options_dataclass)
@@ -113,23 +111,32 @@ class X2WOTCWorld(World):
         self.item_manager.disable_item("ResistanceRadioCompleted")
 
         # Set Alien Hunters locations
-        if self.options.alien_hunters_dlc == AlienHuntersDLC.option_no_integrated_dlc:
+        if self.options.alien_hunters_dlc == "none":
+            for loc_name, loc_data in self.loc_manager.location_table.items():
+                if loc_data.dlc == "AH":
+                    self.loc_manager.disable_location(loc_name)
+            for item_name, item_data in self.item_manager.item_table.items():
+                if item_data.dlc == "AH":
+                    self.item_manager.disable_item(item_name)
+
+        elif self.options.alien_hunters_dlc == "no_integrated_dlc":
             self.loc_manager.disable_location("ExperimentalWeapons")
             self.item_manager.disable_item("ExperimentalWeaponsCompleted")
 
-        elif self.options.alien_hunters_dlc == AlienHuntersDLC.option_no_alien_rulers:
+        elif self.options.alien_hunters_dlc == "no_alien_rulers":
             for loc_name, loc_data in self.loc_manager.location_table.items():
                 if "kill_ruler" in loc_data.tags:
                     self.loc_manager.disable_location(loc_name)
                     if loc_data.normal_item:
                         self.item_manager.disable_item(loc_data.normal_item)
 
-        elif self.options.alien_hunters_dlc == AlienHuntersDLC.option_none:
+        # Disable Shen's Last Gift locations
+        if not self.options.shens_last_gift_dlc:
             for loc_name, loc_data in self.loc_manager.location_table.items():
-                if loc_data.dlc == "AH":
+                if loc_data.dlc == "SLG":
                     self.loc_manager.disable_location(loc_name)
             for item_name, item_data in self.item_manager.item_table.items():
-                if item_data.dlc == "AH":
+                if item_data.dlc == "SLG":
                     self.item_manager.disable_item(item_name)
 
         # Enable progressive tech items
@@ -156,14 +163,14 @@ class X2WOTCWorld(World):
                 warning(f"X2WOTC: Failed to enable progressive psionics tech for player {self.player_name}")
 
         # Enable tech fragment items
-        if self.options.chosen_weapon_fragments == ChosenWeaponFragments.option_two:
+        if self.options.chosen_weapon_fragments == "two":
             if not self.item_manager.enable_progressive_item("ChosenAssassinWeaponsFragment2"):
                 warning(f"X2WOTC: Failed to enable Assassin weapon fragments (2) for player {self.player_name}")
             if not self.item_manager.enable_progressive_item("ChosenHunterWeaponsFragment2"):
                 warning(f"X2WOTC: Failed to enable Hunter weapon fragments (2) for player {self.player_name}")
             if not self.item_manager.enable_progressive_item("ChosenWarlockWeaponsFragment2"):
                 warning(f"X2WOTC: Failed to enable Warlock weapon fragments (2) for player {self.player_name}")
-        elif self.options.chosen_weapon_fragments == ChosenWeaponFragments.option_three:
+        elif self.options.chosen_weapon_fragments == "three":
             if not self.item_manager.enable_progressive_item("ChosenAssassinWeaponsFragment3"):
                 warning(f"X2WOTC: Failed to enable Assassin weapon fragments (3) for player {self.player_name}")
             if not self.item_manager.enable_progressive_item("ChosenHunterWeaponsFragment3"):
@@ -189,25 +196,33 @@ class X2WOTCWorld(World):
                 if loc_data.type == "ItemUse":
                     self.loc_manager.disable_location(loc_name)
 
+        # Disable/enable Ranksanity
+        for loc_name, loc_data in self.loc_manager.location_table.items():
+            if loc_data.type == "SoldierRank" and self.options.rank_sanity.is_excluded(loc_data.tags):
+                self.loc_manager.disable_location(loc_name)
+
+        for loc_name, loc_data in self.loc_manager.location_table.items():
+            if loc_data.type == "SoldierRank" and self.loc_manager.enabled[loc_name]:
+                self.item_manager.add_item(loc_data.normal_item)
+
         # Disable/enable Chosen Huntsanity
-        if self.options.chosen_hunt_sanity == ChosenHuntSanity.option_off:
+        if self.options.chosen_hunt_sanity == "off":
             for loc_name, loc_data in self.loc_manager.location_table.items():
                 if "chosen_hunt" in loc_data.tags:
                     self.loc_manager.disable_location(loc_name)
         else:
-            progressive = self.options.chosen_hunt_sanity == ChosenHuntSanity.option_progressive
-            self.item_manager.enable_chosen_hunt_items(progressive)
+            self.item_manager.enable_chosen_hunt_items(self.options.chosen_hunt_sanity == "progressive")
 
         # Shuffle enemies
         if self.options.enemy_rando:
-            if self.options.enemy_plando_preset == EnemyPlandoPreset.option_advent_only:
+            if self.options.enemy_plando_preset == "advent_only":
                 self.options.enemy_plando.value = {"forced": [], "fixed": [
                     enemy_name for enemy_name in self.enemy_rando_manager.enemy_names
                     if not enemy_name.startswith("Adv")
                 ]}
-            elif self.options.enemy_plando_preset == EnemyPlandoPreset.option_aliens_only:
+            elif self.options.enemy_plando_preset == "aliens_only":
                 self.options.enemy_plando.value = {"forced": [], "fixed": ["Adv"]}
-            elif self.options.enemy_plando_preset == EnemyPlandoPreset.option_separate:
+            elif self.options.enemy_plando_preset == "separate":
                 self.options.enemy_plando.value = {"forced": [[["Adv"], ["Adv"]]], "fixed": []}
             self.enemy_rando_manager.shuffle_enemies(self.options.enemy_plando, self.random)
 
@@ -230,7 +245,7 @@ class X2WOTCWorld(World):
 
         # Exclude post-goal locations (after location data becomes immutable)
         if self.options.exclude_post_goal_locations:
-            goal_difficulty = self.loc_manager.get_location_difficulty(GOAL_VALUE_TO_LOCATION[self.options.goal.value])
+            goal_difficulty = self.loc_manager.get_location_difficulty(self.options.goal.as_event())
             for loc_name, loc_data in self.loc_manager.location_table.items():
                 if not loc_data.id or not self.loc_manager.enabled[loc_name]:
                     continue
@@ -312,18 +327,36 @@ class X2WOTCWorld(World):
             self.random
         )
 
-    # Invalidate power cache on collect/remove
+    # Handle progressive item counts and update current power cache on collect/remove
     def collect(self, state: CollectionState, item: Item) -> bool:
-        change = super().collect(state, item)
-        if change and item.name in self.rule_manager.power_items:
-            state.x2wotc_power_stale[self.player] = True
-        return change
+        changed = super().collect(state, item)
+        if changed:
+            new_count = state.count(item.name, self.player)
+            item_key = self.item_manager.item_display_name_to_key[item.name]
+            item_data = self.item_manager.item_table[item_key]
+            state.x2wotc_power_cache[self.player] += item_data.power
+            if item_data.stages is not None and new_count <= len(item_data.stages):
+                stage = item_data.stages[new_count - 1]
+                if stage is not None:
+                    stage_data = self.item_manager.item_table[stage]
+                    state.add_item(stage_data.display_name, self.player)
+                    state.x2wotc_power_cache[self.player] += stage_data.power
+        return changed
 
     def remove(self, state: CollectionState, item: Item) -> bool:
-        change = super().remove(state, item)
-        if change and item.name in self.rule_manager.power_items:
-            state.x2wotc_power_stale[self.player] = True
-        return change
+        changed = super().remove(state, item)
+        if changed:
+            new_count = state.count(item.name, self.player)
+            item_key = self.item_manager.item_display_name_to_key[item.name]
+            item_data = self.item_manager.item_table[item_key]
+            state.x2wotc_power_cache[self.player] -= item_data.power
+            if item_data.stages is not None and new_count < len(item_data.stages):
+                stage = item_data.stages[new_count]
+                if stage is not None:
+                    stage_data = self.item_manager.item_table[stage]
+                    state.remove_item(stage_data.display_name, self.player)
+                    state.x2wotc_power_cache[self.player] -= stage_data.power
+        return changed
 
     def fill_slot_data(self):
         slot_data = {
@@ -331,7 +364,7 @@ class X2WOTCWorld(World):
             "minimum_client_version": world_minimum_client_version,
             "seed_name": self.multiworld.seed_name,
             "player": self.player,
-            "goal_location": GOAL_VALUE_TO_LOCATION[self.options.goal.value],
+            "goal_location": self.options.goal.as_event(),
             "enemy_shuffle": self.enemy_rando_manager.enemy_shuffle,
         }
 

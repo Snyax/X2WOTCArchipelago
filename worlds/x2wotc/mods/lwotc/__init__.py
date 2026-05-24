@@ -21,7 +21,13 @@ rule_priority = 0.0
 # Handle mod options here
 def generate_early(world: "X2WOTCWorld"):
 
-    # Missions skips not supported
+    # Ranksanity not supported
+    if world.options.rank_sanity != "none" or world.options.global_promotions:
+        world.options.rank_sanity.value = world.options.rank_sanity.option_none
+        world.options.global_promotions.value = False
+        warning(f"X2WOTC: Ignoring ranksanity for player {world.player_name} because the mod 'Long War of the Chosen' is enabled")
+
+    # Mission skips not supported
     if world.options.skip_mission_types:
         world.options.skip_mission_types.value = set()
         warning(f"X2WOTC: Ignoring mission skips for player {world.player_name} because the mod 'Long War of the Chosen' is enabled")
@@ -30,7 +36,7 @@ def generate_early(world: "X2WOTCWorld"):
     for key, value in world.loc_manager.location_table.items():
         world.loc_manager.replace(key, tags={tag for tag in value.tags if not tag.startswith("diff:")})
     if world.options.enemy_rando:
-        world.options.enemy_rando.value = world.options.enemy_rando.option_false
+        world.options.enemy_rando.value = False
         world.enemy_rando_manager.enemy_shuffle.sort()
         warning(f"X2WOTC: Ignoring enemy rando for player {world.player_name} because the mod 'Long War of the Chosen' is enabled")
 

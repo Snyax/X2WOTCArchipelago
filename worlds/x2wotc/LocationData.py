@@ -6,16 +6,9 @@ SHADOW_TECH_LOCATION_PREFIX = "Research "
 ENEMY_KILL_LOCATION_PREFIX = "Kill "
 ENEMY_DESTROY_LOCATION_PREFIX = "Destroy "
 ITEM_USE_LOCATION_PREFIX = "Use "
+SOLDIER_RANK_LOCATION_PREFIX = "Promote "
+SOLDIER_RANK_LOCATION_INFIX = " to "
 COVERT_ACTION_LOCATION_PREFIX = "Complete "
-
-GOAL_VALUE_TO_LOCATION: dict[int, str] = {
-    0: "Victory",
-    1: "Broadcast",
-    2: "Stronghold1",
-    3: "Stronghold2",
-    4: "Stronghold3"
-}
-GOAL_LOCATION_TO_VALUE: dict[str, int] = {location: value for value, location in GOAL_VALUE_TO_LOCATION.items()}
 
 
 class X2WOTCLocationData(NamedTuple):
@@ -945,6 +938,58 @@ wotc_item_uses: dict[str, X2WOTCLocationData] = {
 }
 
 ########################################################################################################################
+##                                           SOLDIER RANK LOCATIONS                                                   ##
+########################################################################################################################
+
+human_soldier_ranks: dict[str, X2WOTCLocationData] = {
+    f"{soldier_class.title()}Rank{rank}": X2WOTCLocationData(
+        display_name = SOLDIER_RANK_LOCATION_PREFIX + soldier_class + SOLDIER_RANK_LOCATION_INFIX + rank_name,
+        id = get_new_location_id(),
+        type = "SoldierRank",
+        tags = {soldier_class.lower(), f"item:{soldier_class.title()}Rank:{rank - 1}"},
+        dlc = dlc,
+        normal_item = f"{soldier_class.title()}Rank"
+    )
+    for (soldier_class, dlc) in [
+        ("Ranger", None),
+        ("Grenadier", None),
+        ("Specialist", None),
+        ("Sharpshooter", None),
+        ("Reaper", "WOTC"),
+        ("Skirmisher", "WOTC"),
+        ("Templar", "WOTC"),
+    ]
+    for (rank, rank_name) in [
+        (2, "Corporal"),
+        (3, "Sergeant"),
+        (4, "Lieutenant"),
+        (5, "Captain"),
+        (6, "Major"),
+        (7, "Colonel"),
+    ]
+}
+
+spark_soldier_ranks: dict[str, X2WOTCLocationData] = {
+    f"SparkRank{rank}": X2WOTCLocationData(
+        display_name = SOLDIER_RANK_LOCATION_PREFIX + "SPARK" + SOLDIER_RANK_LOCATION_INFIX + rank_name,
+        id = get_new_location_id(),
+        type = "SoldierRank",
+        tags = {"spark", "proving_ground", f"item:SparkRank:{rank - 1}"},
+        dlc = "SLG",
+        difficulty = 35.0,  # 100 supplies, 2 cores, 20 alloys, 15 elerium (1 PG project)
+        normal_item = "SparkRank"
+    )
+    for (rank, rank_name) in [
+        (2, "Aspirant"),
+        (3, "Knight"),
+        (4, "Cavalier"),
+        (5, "Vanguard"),
+        (6, "Paladin"),
+        (7, "Champion"),
+    ]
+}
+
+########################################################################################################################
 ##                                          COVERT ACTION LOCATIONS                                                   ##
 ########################################################################################################################
 
@@ -957,7 +1002,7 @@ chosen_hunt_covert_actions: dict[str, X2WOTCLocationData] = {
         display_name = COVERT_ACTION_LOCATION_PREFIX + "First Chosen Hunt 1/3",
         id = get_new_location_id(),
         type = "CovertAction",
-        tags = {"chosen_hunt", "meet_first_chosen", "influence:0"},
+        tags = {"chosen_hunt", "meet_first_chosen"},
         difficulty = 20.0,
         dlc = "WOTC"
     ),
@@ -965,7 +1010,7 @@ chosen_hunt_covert_actions: dict[str, X2WOTCLocationData] = {
         display_name = COVERT_ACTION_LOCATION_PREFIX + "Second Chosen Hunt 1/3",
         id = get_new_location_id(),
         type = "CovertAction",
-        tags = {"chosen_hunt", "meet_all_chosen", "influence:0"},
+        tags = {"chosen_hunt", "meet_all_chosen"},
         difficulty = 35.0,
         dlc = "WOTC"
     ),
@@ -973,7 +1018,7 @@ chosen_hunt_covert_actions: dict[str, X2WOTCLocationData] = {
         display_name = COVERT_ACTION_LOCATION_PREFIX + "Third Chosen Hunt 1/3",
         id = get_new_location_id(),
         type = "CovertAction",
-        tags = {"chosen_hunt", "meet_all_chosen", "influence:0"},
+        tags = {"chosen_hunt", "meet_all_chosen"},
         difficulty = 50.0,
         dlc = "WOTC"
     ),
@@ -981,7 +1026,7 @@ chosen_hunt_covert_actions: dict[str, X2WOTCLocationData] = {
         display_name = COVERT_ACTION_LOCATION_PREFIX + "First Chosen Hunt 2/3",
         id = get_new_location_id(),
         type = "CovertAction",
-        tags = {"chosen_hunt", "meet_first_chosen", "influence:1"},
+        tags = {"chosen_hunt", "meet_first_chosen", "item:FactionInfluence:1"},
         difficulty = 30.0,
         dlc = "WOTC"
     ),
@@ -989,7 +1034,7 @@ chosen_hunt_covert_actions: dict[str, X2WOTCLocationData] = {
         display_name = COVERT_ACTION_LOCATION_PREFIX + "Second Chosen Hunt 2/3",
         id = get_new_location_id(),
         type = "CovertAction",
-        tags = {"chosen_hunt", "meet_all_chosen", "influence:3"},
+        tags = {"chosen_hunt", "meet_all_chosen", "item:FactionInfluence:3"},
         difficulty = 45.0,
         dlc = "WOTC"
     ),
@@ -997,7 +1042,7 @@ chosen_hunt_covert_actions: dict[str, X2WOTCLocationData] = {
         display_name = COVERT_ACTION_LOCATION_PREFIX + "Third Chosen Hunt 2/3",
         id = get_new_location_id(),
         type = "CovertAction",
-        tags = {"chosen_hunt", "meet_all_chosen", "influence:5"},
+        tags = {"chosen_hunt", "meet_all_chosen", "item:FactionInfluence:5"},
         difficulty = 60.0,
         dlc = "WOTC"
     ),
@@ -1005,7 +1050,7 @@ chosen_hunt_covert_actions: dict[str, X2WOTCLocationData] = {
         display_name = COVERT_ACTION_LOCATION_PREFIX + "First Chosen Hunt 3/3",
         id = get_new_location_id(),
         type = "CovertAction",
-        tags = {"chosen_hunt", "meet_first_chosen", "influence:2"},
+        tags = {"chosen_hunt", "meet_first_chosen", "item:FactionInfluence:2"},
         difficulty = 40.0,
         dlc = "WOTC"
     ),
@@ -1013,7 +1058,7 @@ chosen_hunt_covert_actions: dict[str, X2WOTCLocationData] = {
         display_name = COVERT_ACTION_LOCATION_PREFIX + "Second Chosen Hunt 3/3",
         id = get_new_location_id(),
         type = "CovertAction",
-        tags = {"chosen_hunt", "meet_all_chosen", "influence:4"},
+        tags = {"chosen_hunt", "meet_all_chosen", "item:FactionInfluence:4"},
         difficulty = 55.0,
         dlc = "WOTC"
     ),
@@ -1021,7 +1066,7 @@ chosen_hunt_covert_actions: dict[str, X2WOTCLocationData] = {
         display_name = COVERT_ACTION_LOCATION_PREFIX + "Third Chosen Hunt 3/3",
         id = get_new_location_id(),
         type = "CovertAction",
-        tags = {"chosen_hunt", "meet_all_chosen", "influence:6"},
+        tags = {"chosen_hunt", "meet_all_chosen", "item:FactionInfluence:6"},
         difficulty = 70.0,
         dlc = "WOTC"
     ),
@@ -1086,14 +1131,16 @@ item_use_location_table: dict[str, X2WOTCLocationData] = {
     **wotc_item_uses,
 }
 
-covert_action_location_table: dict[str, X2WOTCLocationData] = {
-    **chosen_hunt_covert_actions,
+soldier_rank_location_table: dict[str, X2WOTCLocationData] = {
+    **human_soldier_ranks,
+    **spark_soldier_ranks,
 }
 
 location_table: dict[str, X2WOTCLocationData] = {
     **tech_location_table,
     **kill_location_table,
     **item_use_location_table,
-    **covert_action_location_table,
+    **soldier_rank_location_table,
+    **chosen_hunt_covert_actions,
     **event_locations,
 }

@@ -9,10 +9,8 @@ from Options import (
     PerGameCommonOptions,
     Range,
     StartInventoryPool,
-    Toggle
+    Toggle,
 )
-
-from .LocationData import GOAL_LOCATION_TO_VALUE
 
 from .mods import mod_names, mod_options
 
@@ -20,15 +18,15 @@ from .mods import mod_names, mod_options
 class AlienHuntersDLC(Choice):
     """Set which locations and items from the Alien Hunters DLC are enabled.
 
-    all:                  All Alien Hunters DLC locations and items are enabled.
+    none:                 All Alien Hunters DLC locations and items are disabled.
     no_integrated_dlc:    Experimental Weapons location is disabled; for playing without the Integrated DLC option.
     no_alien_rulers:      Alien Ruler locations are disabled; for avoiding tedious encounters.
-    none:                 All Alien Hunters DLC locations and items are disabled; for playing without the Alien Hunters DLC."""
+    all:                  All Alien Hunters DLC locations and items are enabled."""
     display_name = "Alien Hunters DLC"
-    option_all = 0
+    option_none = 0
     option_no_integrated_dlc = 1
     option_no_alien_rulers = 2
-    option_none = 3
+    option_all = 3
     default = option_none
 
 
@@ -50,12 +48,23 @@ class Goal(Choice):
     alien_fortress and network_tower (without extra considerations) are only recommended for async settings.
     For sync settings, maybe try chosen_stronghold_1 first and experiment from there."""
     display_name = "Goal"
-    option_alien_fortress = GOAL_LOCATION_TO_VALUE["Victory"]
-    option_network_tower = GOAL_LOCATION_TO_VALUE["Broadcast"]
-    option_chosen_stronghold_1 = GOAL_LOCATION_TO_VALUE["Stronghold1"]
-    option_chosen_stronghold_2 = GOAL_LOCATION_TO_VALUE["Stronghold2"]
-    option_chosen_stronghold_3 = GOAL_LOCATION_TO_VALUE["Stronghold3"]
+    option_alien_fortress = 0
+    option_network_tower = 1
+    option_chosen_stronghold_1 = 2
+    option_chosen_stronghold_2 = 3
+    option_chosen_stronghold_3 = 4
     default = option_alien_fortress
+
+    value_to_event = {
+        option_alien_fortress: "Victory",
+        option_network_tower: "Broadcast",
+        option_chosen_stronghold_1: "Stronghold1",
+        option_chosen_stronghold_2: "Stronghold2",
+        option_chosen_stronghold_3: "Stronghold3",
+    }
+
+    def as_event(self) -> str:
+        return self.value_to_event[self.value]
 
 
 class CampaignCompletionRequirements(OptionSet):
@@ -80,7 +89,7 @@ class ExcludePostGoalLocations(Toggle):
     Excluded locations can only contain filler or traps, never progression or useful items.
     NOTE: This option is likely to cause generation failures if an early goal is selected,
     unless enough additional vacant locations are enabled, e.g. through Enemysanity or Itemsanity.
-    If you can, however, consider leaving it on, escpecially in sync settings."""
+    If you can, however, consider leaving it on, especially in sync settings."""
     display_name = "Exclude Post-Goal Locations"
     default = True
 
@@ -94,6 +103,47 @@ class EnemySanity(Toggle):
 class ItemSanity(Toggle):
     """Enable locations for the first use of each item type."""
     display_name = "Itemsanity"
+    default = False
+
+
+class RankSanity(Choice):
+    """Shuffle soldier rank-up locations and promotion items.
+
+    none:               Do not shuffle soldier promotions.
+    base_classes_only:  Only shuffle promotions for the four base soldier classes.
+    no_spark:           Only shuffle promotions for the four base soldier classes and the three faction hero classes.
+    no_faction_heroes:  Only shuffle promotions for the four base soldier classes and SPARKs.
+    all:                Shuffle promotions for all eight soldier classes."""
+    display_name = "Ranksanity"
+    option_none = 0
+    option_base_classes_only = 1
+    option_no_spark = 2
+    option_no_faction_heroes = 3
+    option_all = 4
+    default = option_none
+
+    spark_tags = {"spark"}
+    faction_hero_tags = {"reaper", "skirmisher", "templar"}
+
+    def is_excluded(self, tags: set[str]) -> bool:
+        return (self.value == self.option_none
+                or (self.value == self.option_no_spark
+                    and any(tag in tags for tag in self.spark_tags))
+                or (self.value == self.option_no_faction_heroes
+                    and any(tag in tags for tag in self.faction_hero_tags))
+                or (self.value == self.option_base_classes_only
+                    and any(tag in tags for tag in self.spark_tags | self.faction_hero_tags)))
+
+    def all_humans_included(self) -> bool:
+        return self.value == self.option_no_spark or self.value == self.option_all
+
+
+class GlobalPromotions(Toggle):
+    """Enable global promotions for all soldier classes, including those not covered by Ranksanity.
+    This adds no locations to the multiworld but rewards default promotion items for rank-up events of all classes,
+    meaning when one soldier reaches a certain rank, all soldiers of the same class will now have that rank going forward.
+    Recommended if you want insurance against Deathlink without enabling full Ranksanity (as it "saves your progress")."""
+    display_name = "Global Promotions"
     default = False
 
 
@@ -204,7 +254,7 @@ class EnemyRando(Toggle):
 
 class EnemyPlandoPreset(Choice):
     """Override enemy plando with a preset configuration.
-    
+
     custom:         All enemies are shuffled by default. Edit enemy plando manually for finer control.
     advent_only:    Only ADVENT enemies are shuffled.
     aliens_only:    Only alien (non-ADVENT) enemies are shuffled.
@@ -221,7 +271,7 @@ class EnemyPlando(OptionDict):
     """If enemy rando is enabled, constrain enemy placements.
     Define explicit shuffle groups with the 'forced' key.
     Exempt enemies from shuffling with the 'fixed' key.
-    
+
     Example: {
         'forced': [
             [['Sectoid', 'Muton'], ['Viper', 'Archon']],
@@ -250,7 +300,7 @@ class RemoveCorpseCosts(Toggle):
 class HintResearchProjects(Choice):
     """Enable research project hints in the Avenger laboratory and shadow chamber.
     Can be changed in-game via Mod Config Menu.
-    
+
     off:       Reveal no item info and don't create server hints.
     partial:   Reveal item categories but don't create server hints.
     full:      Reveal all item info and create server hints."""
@@ -336,28 +386,28 @@ class InstantRookieTraining(Toggle):
     """Make training rookies in the GTS instant.
     Can be changed in-game via Mod Config Menu."""
     display_name = "Instant Rookie Training"
-    default = True
+    default = False
 
 
 class InstantSPARKConstruction(Toggle):
     """Make constructing SPARKs in the Proving Ground instant. No effect if Shen's Last Gift DLC is disabled.
     Can be changed in-game via Mod Config Menu."""
     display_name = "Instant SPARK Construction"
-    default = True
+    default = False
 
 
 class RefundSPARKCosts(Toggle):
     """Get construction costs refunded when a SPARK is destroyed. No effect if Shen's Last Gift DLC is disabled.
     Can be changed in-game via Mod Config Menu."""
     display_name = "Refund SPARK Costs"
-    default = True
+    default = False
 
 
 class ReplaceFactionHeroes(Toggle):
     """Gain automatic replacements for dead or missing faction heroes.
     Can be changed in-game via Mod Config Menu."""
     display_name = "Replace Faction Heroes"
-    default = True
+    default = False
 
 
 class DisableDayOneTraps(Toggle):
@@ -401,6 +451,8 @@ class X2WOTCOptions(PerGameCommonOptions):
     # Location options
     enemy_sanity: EnemySanity
     item_sanity: ItemSanity
+    rank_sanity: RankSanity
+    global_promotions: GlobalPromotions
     chosen_hunt_sanity: ChosenHuntSanity
 
     # Item options
@@ -421,7 +473,6 @@ class X2WOTCOptions(PerGameCommonOptions):
     enemy_plando_preset: EnemyPlandoPreset
     enemy_plando: EnemyPlando
     remove_corpse_costs: RemoveCorpseCosts
-
 
     # Config options
     hint_research_projects: HintResearchProjects
@@ -467,6 +518,8 @@ x2wotc_option_groups: list[OptionGroup] = [
         [
             EnemySanity,
             ItemSanity,
+            RankSanity,
+            GlobalPromotions,
             ChosenHuntSanity,
         ]
     ),

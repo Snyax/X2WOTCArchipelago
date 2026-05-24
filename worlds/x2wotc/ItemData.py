@@ -5,21 +5,13 @@ from BaseClasses import ItemClassification as IC
 
 TECH_ITEM_PREFIX = "[Tech] "
 SHADOW_TECH_ITEM_PREFIX = "[Tech] "
+PROMOTION_ITEM_PREFIX = "[Promotion] "
 CHOSEN_HUNT_ITEM_PREFIX = "[Chosen Hunt] "
 RESOURCE_ITEM_PREFIX = "[Resource] "
 WEAPON_MOD_ITEM_PREFIX = "[Upgrade] "
 PCS_ITEM_PREFIX = "[PCS] "
 STAFF_ITEM_PREFIX = "[Staff] "
 TRAP_ITEM_PREFIX = "[Trap] "
-
-GOAL_VALUE_TO_ITEM: dict[int, str] = {
-    0: "Victory",
-    1: "Broadcast",
-    2: "Stronghold1",
-    3: "Stronghold2",
-    4: "Stronghold3"
-}
-GOAL_ITEM_TO_VALUE: dict[str, int] = {item: value for value, item in GOAL_VALUE_TO_ITEM.items()}
 
 
 class X2WOTCItemData(NamedTuple):
@@ -714,6 +706,32 @@ tech_fragment_items: dict[str, X2WOTCItemData] = {
 }
 
 ########################################################################################################################
+##                                               PROMOTION ITEMS                                                      ##
+########################################################################################################################
+
+promotion_items: dict[str, X2WOTCItemData] = {
+    f"{soldier_class.title()}Rank": X2WOTCItemData(
+        display_name = PROMOTION_ITEM_PREFIX + soldier_class,
+        id = get_new_item_id(),
+        classification = IC.progression,
+        type = "Promotion",
+        tags = {soldier_class.lower()},
+        power = 15.0,
+        dlc = dlc
+    )
+    for (soldier_class, dlc) in [
+        ("Ranger", None),
+        ("Grenadier", None),
+        ("Specialist", None),
+        ("Sharpshooter", None),
+        ("SPARK", "SLG"),
+        ("Reaper", "WOTC"),
+        ("Skirmisher", "WOTC"),
+        ("Templar", "WOTC"),
+    ]
+}
+
+########################################################################################################################
 ##                                         COVERT ACTION REWARD ITEMS                                                 ##
 ########################################################################################################################
 
@@ -1293,10 +1311,6 @@ tech_item_table: dict[str, X2WOTCItemData] = {
     **tech_fragment_items,
 }
 
-covert_action_item_table: dict[str, X2WOTCItemData] = {
-    **chosen_hunt_items,
-}
-
 resource_item_table: dict[str, X2WOTCItemData] = {
     **supplies_items,
     **intel_items,
@@ -1337,7 +1351,8 @@ trap_item_table: dict[str, X2WOTCItemData] = {
 
 item_table: dict[str, X2WOTCItemData] = {
     **tech_item_table,
-    **covert_action_item_table,
+    **promotion_items,
+    **chosen_hunt_items,
     **filler_item_table,
     **trap_item_table,
     **nothing_items,
