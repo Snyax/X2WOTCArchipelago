@@ -275,7 +275,6 @@ class ItemManager:
     def add_filler_items(
             self,
             num_filler_items: int,
-            max_useful_filler: int,
             resource_share: int,
             weapon_mod_share: int,
             pcs_share: int,
@@ -314,13 +313,6 @@ class ItemManager:
         for (num, names) in num_names_pairs:
             for _ in range(num):
                 if names:
-                    filler_item = random.choice(names)
-
-                    # Don't add more useful items than allowed
-                    if self.item_table[filler_item].classification & IC.useful:
-                        max_useful_filler -= 1
-                        if max_useful_filler < 0:
-                            filler_item = self.get_nothing_item(random)
+                    self.add_item(random.choice(names))
                 else:
-                    filler_item = self.get_nothing_item(random)
-                self.add_item(filler_item)
+                    self.add_item(self.get_nothing_item(random))

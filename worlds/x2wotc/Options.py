@@ -86,10 +86,9 @@ class CampaignCompletionRequirements(OptionSet):
 
 class ExcludePostGoalLocations(Toggle):
     """Exclude locations that are considered more difficult than the selected goal event.
-    Excluded locations can only contain filler or traps, never progression or useful items.
-    NOTE: This option is likely to cause generation failures if an early goal is selected,
-    unless enough additional vacant locations are enabled, e.g. through Enemysanity or Itemsanity.
-    If you can, however, consider leaving it on, especially in sync settings."""
+    These locations will not contain important items or items from other worlds.
+    Recommended when using an early goal option, e.g. in sync settings.
+    NOTE: This option requires enabling additional vacant locations, e.g. through Enemysanity or Itemsanity."""
     display_name = "Exclude Post-Goal Locations"
     default = True
 

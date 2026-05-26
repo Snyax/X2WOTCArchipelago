@@ -82,6 +82,8 @@ class X2WOTCWorld(World):
         self.rule_manager: RuleManager = None  # Rule manager is initialized in generate_early
         self.reg_manager: RegionManager = None  # Region manager requires rule manager
 
+        self.manual_filler_locations: set[str] = set()
+
     def generate_early(self):
         # Extract slot data for UT re-gen
         re_gen_passthrough = getattr(self.multiworld, "re_gen_passthrough", {})
@@ -247,10 +249,9 @@ class X2WOTCWorld(World):
         if self.options.exclude_post_goal_locations:
             goal_difficulty = self.loc_manager.get_location_difficulty(self.options.goal.as_event())
             for loc_name, loc_data in self.loc_manager.location_table.items():
-                if not loc_data.id or not self.loc_manager.enabled[loc_name]:
-                    continue
-                if self.loc_manager.get_location_difficulty(loc_name) > goal_difficulty:
-                    self.options.exclude_locations.value.add(loc_data.display_name)
+                if loc_data.id and self.loc_manager.enabled[loc_name]:
+                    if self.loc_manager.get_location_difficulty(loc_name) > goal_difficulty:
+                        self.manual_filler_locations.add(loc_data.display_name)
 
         # Validate location and item counts
         num_filler_items = self.loc_manager.num_locations - self.item_manager.num_items
@@ -259,8 +260,8 @@ class X2WOTCWorld(World):
                 f"X2WOTC: Too many items for player {self.player_name}. "
                 f"Disable Chosen Weapon Fragments or enable at least {-num_filler_items} more location(s)."
             )
-        max_useful_filler = num_filler_items - len(self.options.exclude_locations.value)
-        if self.options.exclude_post_goal_locations and max_useful_filler < 0:
+        num_filler_items -= len(self.manual_filler_locations)
+        if num_filler_items < 0:
             raise OptionError(
                 f"X2WOTC: Too many excluded locations for player {self.player_name}. "
                 "Consider enabling more locations or disabling Exclude Post-Goal Locations."
@@ -270,7 +271,6 @@ class X2WOTCWorld(World):
         info(f"X2WOTC: Adding {num_filler_items} filler items for player {self.player_name}")
         self.item_manager.add_filler_items(
             num_filler_items,
-            max_useful_filler,
             self.options.resource_share.value,
             self.options.weapon_mod_share.value,
             self.options.pcs_share.value,
@@ -315,6 +315,12 @@ class X2WOTCWorld(World):
         for mod_data in mods_data:
             if mod_data.set_rules and mod_data.name in self.options.active_mods:
                 mod_data.set_rules(self)
+
+    def pre_fill(self):
+        for location_name in self.manual_filler_locations:
+            location = self.get_location(location_name)
+            filler_item = self.create_item(self.get_filler_item_name())
+            location.place_locked_item(filler_item)
 
     def get_filler_item_name(self) -> str:
         return self.item_manager.get_filler_item_name(
