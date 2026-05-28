@@ -317,7 +317,7 @@ class X2WOTCWorld(World):
                 mod_data.set_rules(self)
 
     def pre_fill(self):
-        for location_name in self.manual_filler_locations:
+        for location_name in sorted(self.manual_filler_locations):
             location = self.get_location(location_name)
             filler_item = self.create_item(self.get_filler_item_name())
             location.place_locked_item(filler_item)
