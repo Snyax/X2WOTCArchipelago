@@ -372,6 +372,11 @@ class X2WOTCWorld(World):
             "player": self.player,
             "goal_location": self.options.goal.as_event(),
             "enemy_shuffle": self.enemy_rando_manager.enemy_shuffle,
+            "active_progressive_items": [
+                item_name
+                for item_name, item_data in self.item_manager.item_table.items()
+                if item_data.stages is not None and self.item_manager.item_count[item_name] > 0
+            ],
         }
 
         slot_data |= self.options.as_dict(*self.option_names, toggles_as_bools=True)

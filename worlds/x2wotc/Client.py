@@ -350,10 +350,12 @@ class X2WOTCContext(CommonContext):
 
                 item_name = text.split('"', 1)[1]
                 item_key = item_display_name_to_key[item_name]
+                active_progressive_items = self.slot_data.get("active_progressive_items", [])
                 progressive_item_names = [
-                        item_data.display_name
-                        for item_data in item_table.values()
-                        if item_data.stages is not None and item_key in item_data.stages
+                    item_data.display_name
+                    for item_name, item_data in item_table.items()
+                    if item_data.stages is not None and item_key in item_data.stages
+                        and item_name in active_progressive_items
                 ]
 
                 if progressive_item_names:
