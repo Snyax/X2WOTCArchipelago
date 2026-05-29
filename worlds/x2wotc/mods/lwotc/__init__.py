@@ -340,21 +340,14 @@ config: dict[str, str] = {
     "X2Effect_ItemUseCheck": dedent(
         r"""
         +CheckUseItems=ShapedCharge
-        +CheckUseItemCategories=(CategoryName=GasGrenade, \\
-            Members[0]=GasGrenade, \\
-            Members[1]=GasGrenadeMk2 \\
-        )
-        +CheckUseItemCategories=(CategoryName=Firebomb, \\
-            Members[0]=Firebomb, \\
-            Members[1]=FirebombMk2 \\
-        )
-        +CheckUseItemCategories=(CategoryName=AcidGrenade, \\
-            Members[0]=AcidGrenade, \\
-            Members[1]=AcidGrenadeMk2 \\
-        )
+        +CheckUseItemCategories=(CategoryName=GasGrenade, Members[0]=GasGrenadeMk2)
+        +CheckUseItemCategories=(CategoryName=Firebomb, Members[0]=FirebombMk2)
+        +CheckUseItemCategories=(CategoryName=AcidGrenade, Members[0]=AcidGrenadeMk2)
         +CheckUseItems=GasGrenadeMk2
         +CheckUseItems=FirebombMk2
         +CheckUseItems=AcidGrenadeMk2
+        +CheckUseItemCategories=(CategoryName=ShredderGun, Members[0]=ShredstormCannon)
+        +CheckUseItemCategories=(CategoryName=PrototypePlasmaBlaster, Members[0]=PlasmaBlaster)
         +CheckUseItems=PrototypePlasmaBlaster
         +CheckUseItems=PlasmaBlaster
         +CheckUseItems=ShredderGun
@@ -369,6 +362,18 @@ config: dict[str, str] = {
         +CheckUseItems=RedscreenRounds
         +CheckUseItems=NeedleRounds
         +CheckUseItems=FalconRounds
+
+        +CheckUseItemExcludeAbilities=Suppression_LW
+        +CheckUseItemIncludeAbilities=SuppressionShot_LW
+        +CheckUseItemExcludeAbilities=AreaSuppression
+        +CheckUseItemIncludeAbilities=AreaSuppressionShot_LW
+        +CheckUseItemExcludeAbilities=LeadTheTarget_LW
+        +CheckUseItemIncludeAbilities=LeadTheTargetShot_LW
+        +CheckUseItemExcludeAbilities=Stock_LW_Bsc_Ability
+        +CheckUseItemExcludeAbilities=Stock_LW_Adv_Ability
+        +CheckUseItemExcludeAbilities=Stock_LW_Sup_Ability
+        +CheckUseItemExcludeAbilities=Gunslinger
+        +CheckUseItemIncludeAbilities=GunslingerShot
         """
     )
 }
