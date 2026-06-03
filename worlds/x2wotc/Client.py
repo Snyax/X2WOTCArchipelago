@@ -124,7 +124,7 @@ class X2WOTCCommandProcessor(ClientCommandProcessor):
         return True
 
     def _cmd_mods(self) -> bool:
-        """List all installed and active mods"""
+        """List all installed and active APWorld mods"""
         if mod_names:
             self.output("Installed mods:")
             for mod_name in mod_names:
@@ -149,7 +149,7 @@ class X2WOTCCommandProcessor(ClientCommandProcessor):
         return True
 
     def _cmd_install_mod(self) -> bool:
-        """Install a mod"""
+        """Install an APWorld mod"""
         mod_path = open_filename("Select mod file", [("x2wotc mod", [".py", ".zip"])])
         if not mod_path:
             self.output("No file selected.")
@@ -175,7 +175,7 @@ class X2WOTCCommandProcessor(ClientCommandProcessor):
         return True
 
     def _cmd_clear_mods(self) -> bool:
-        """Uninstall all mods"""
+        """Uninstall all APWorld mods"""
         apworld_path = f"{__file__.split(".apworld")[0]}.apworld"
         temp_path = f"{apworld_path}.tmp"
 
