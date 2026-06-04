@@ -10,6 +10,8 @@ if TYPE_CHECKING:
 from .Items import item_table, item_id_to_key
 from .Locations import location_table, loc_id_to_key
 
+from .mods import mods_data
+
 
 ctx: "X2WOTCContext"
 
@@ -114,6 +116,13 @@ def get_locations_info(checks: list[str]) -> LocationsInfo:
 
 async def send_checks(checks: list[str], connected: bool = True):
     for loc_name in checks:
+
+        # Resolve APworld mod location mapping
+        for mod_data in reversed(mods_data):
+            if mod_data.name in ctx.active_mods and loc_name in mod_data.location_map:
+                loc_name = mod_data.location_map[loc_name]
+                break
+
         try:
             loc_id = location_table[loc_name].id
         except KeyError:
@@ -173,6 +182,12 @@ def get_received_items(layer: str, number_received: int) -> ItemsInfo:
                 stage = stages[index]
                 if stage is not None:
                     item_name = stage
+
+        # Resolve APWorld mod item mapping
+        for mod_data in reversed(mods_data):
+            if mod_data.name in ctx.active_mods and item_name in mod_data.item_map:
+                item_name = mod_data.item_map[item_name]
+                break
 
         slot_info = get_slot_info(network_item.player)
         items_info.append((item_name, network_item, slot_info))

@@ -15,7 +15,9 @@ class X2WOTCModData(NamedTuple):
     name: str
     rule_priority: float = 0.0
     items: dict[str, X2WOTCItemData] = {}
+    item_map: dict[str, str] = {}
     locations: dict[str, X2WOTCLocationData] = {}
+    location_map: dict[str, str] = {}
     set_rules: Callable[["X2WOTCWorld"], None] | None = None
     options: list[tuple[str, type[Option]]] = []
     generate_early: Callable[["X2WOTCWorld"], None] | None = None
@@ -41,7 +43,9 @@ for loader, module_name, ispkg in pkgutil.iter_modules(__path__):
         name = module.name if hasattr(module, "name") else module_name,
         rule_priority = module.rule_priority if hasattr(module, "rule_priority") else 0,
         items = module.items if hasattr(module, "items") else {},
+        item_map = module.item_map if hasattr(module, "item_map") else {},
         locations = module.locations if hasattr(module, "locations") else {},
+        location_map = module.location_map if hasattr(module, "location_map") else {},
         set_rules = module.set_rules if hasattr(module, "set_rules") else None,
         options = module.options if hasattr(module, "options") else [],
         generate_early = module.generate_early if hasattr(module, "generate_early") else None,
