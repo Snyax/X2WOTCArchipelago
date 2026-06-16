@@ -999,7 +999,7 @@ spark_soldier_ranks: dict[str, X2WOTCLocationData] = {
 
 chosen_hunt_covert_actions: dict[str, X2WOTCLocationData] = {
     "ChosenHuntPt1:1": X2WOTCLocationData(
-        display_name = COVERT_ACTION_LOCATION_PREFIX + "First Chosen Hunt 1/3",
+        display_name = COVERT_ACTION_LOCATION_PREFIX + "Behind Enemy Lines (1/3)",
         id = get_new_location_id(),
         type = "CovertAction",
         tags = {"chosen_hunt", "meet_first_chosen"},
@@ -1007,7 +1007,7 @@ chosen_hunt_covert_actions: dict[str, X2WOTCLocationData] = {
         dlc = "WOTC"
     ),
     "ChosenHuntPt1:2": X2WOTCLocationData(
-        display_name = COVERT_ACTION_LOCATION_PREFIX + "Second Chosen Hunt 1/3",
+        display_name = COVERT_ACTION_LOCATION_PREFIX + "Behind Enemy Lines (2/3)",
         id = get_new_location_id(),
         type = "CovertAction",
         tags = {"chosen_hunt", "meet_all_chosen"},
@@ -1015,7 +1015,7 @@ chosen_hunt_covert_actions: dict[str, X2WOTCLocationData] = {
         dlc = "WOTC"
     ),
     "ChosenHuntPt1:3": X2WOTCLocationData(
-        display_name = COVERT_ACTION_LOCATION_PREFIX + "Third Chosen Hunt 1/3",
+        display_name = COVERT_ACTION_LOCATION_PREFIX + "Behind Enemy Lines (3/3)",
         id = get_new_location_id(),
         type = "CovertAction",
         tags = {"chosen_hunt", "meet_all_chosen"},
@@ -1023,7 +1023,7 @@ chosen_hunt_covert_actions: dict[str, X2WOTCLocationData] = {
         dlc = "WOTC"
     ),
     "ChosenHuntPt2:1": X2WOTCLocationData(
-        display_name = COVERT_ACTION_LOCATION_PREFIX + "First Chosen Hunt 2/3",
+        display_name = COVERT_ACTION_LOCATION_PREFIX + "Find the Stronghold (1/3)",
         id = get_new_location_id(),
         type = "CovertAction",
         tags = {"chosen_hunt", "meet_first_chosen", "item:FactionInfluence:1"},
@@ -1031,7 +1031,7 @@ chosen_hunt_covert_actions: dict[str, X2WOTCLocationData] = {
         dlc = "WOTC"
     ),
     "ChosenHuntPt2:2": X2WOTCLocationData(
-        display_name = COVERT_ACTION_LOCATION_PREFIX + "Second Chosen Hunt 2/3",
+        display_name = COVERT_ACTION_LOCATION_PREFIX + "Find the Stronghold (2/3)",
         id = get_new_location_id(),
         type = "CovertAction",
         tags = {"chosen_hunt", "meet_all_chosen", "item:FactionInfluence:3"},
@@ -1039,7 +1039,7 @@ chosen_hunt_covert_actions: dict[str, X2WOTCLocationData] = {
         dlc = "WOTC"
     ),
     "ChosenHuntPt2:3": X2WOTCLocationData(
-        display_name = COVERT_ACTION_LOCATION_PREFIX + "Third Chosen Hunt 2/3",
+        display_name = COVERT_ACTION_LOCATION_PREFIX + "Find the Stronghold (3/3)",
         id = get_new_location_id(),
         type = "CovertAction",
         tags = {"chosen_hunt", "meet_all_chosen", "item:FactionInfluence:5"},
@@ -1047,7 +1047,7 @@ chosen_hunt_covert_actions: dict[str, X2WOTCLocationData] = {
         dlc = "WOTC"
     ),
     "ChosenHuntPt3:1": X2WOTCLocationData(
-        display_name = COVERT_ACTION_LOCATION_PREFIX + "First Chosen Hunt 3/3",
+        display_name = COVERT_ACTION_LOCATION_PREFIX + "Into the Fire (1/3)",
         id = get_new_location_id(),
         type = "CovertAction",
         tags = {"chosen_hunt", "meet_first_chosen", "item:FactionInfluence:2"},
@@ -1055,7 +1055,7 @@ chosen_hunt_covert_actions: dict[str, X2WOTCLocationData] = {
         dlc = "WOTC"
     ),
     "ChosenHuntPt3:2": X2WOTCLocationData(
-        display_name = COVERT_ACTION_LOCATION_PREFIX + "Second Chosen Hunt 3/3",
+        display_name = COVERT_ACTION_LOCATION_PREFIX + "Into the Fire (2/3)",
         id = get_new_location_id(),
         type = "CovertAction",
         tags = {"chosen_hunt", "meet_all_chosen", "item:FactionInfluence:4"},
@@ -1063,7 +1063,7 @@ chosen_hunt_covert_actions: dict[str, X2WOTCLocationData] = {
         dlc = "WOTC"
     ),
     "ChosenHuntPt3:3": X2WOTCLocationData(
-        display_name = COVERT_ACTION_LOCATION_PREFIX + "Third Chosen Hunt 3/3",
+        display_name = COVERT_ACTION_LOCATION_PREFIX + "Into the Fire (3/3)",
         id = get_new_location_id(),
         type = "CovertAction",
         tags = {"chosen_hunt", "meet_all_chosen", "item:FactionInfluence:6"},
