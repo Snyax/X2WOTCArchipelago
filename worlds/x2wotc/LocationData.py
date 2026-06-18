@@ -63,7 +63,7 @@ vanilla_weapon_techs: dict[str, X2WOTCLocationData] = {
         id = get_new_location_id(),
         type = "Tech",
         tags = {"tree:ModularWeapons"},
-        difficulty = 15.0,
+        difficulty = 20.0,
         normal_item = "MagnetizedWeaponsCompleted"
     ),
     "GaussWeapons": X2WOTCLocationData(
@@ -71,7 +71,7 @@ vanilla_weapon_techs: dict[str, X2WOTCLocationData] = {
         id = get_new_location_id(),
         type = "Tech",
         tags = {"tree:MagnetizedWeapons"},
-        difficulty = 25.0,
+        difficulty = 30.0,
         normal_item = "GaussWeaponsCompleted"
     ),
     "PlasmaRifle": X2WOTCLocationData(
@@ -79,7 +79,7 @@ vanilla_weapon_techs: dict[str, X2WOTCLocationData] = {
         id = get_new_location_id(),
         type = "Tech",
         tags = {"tree:Tech_Elerium"},
-        difficulty = 45.0,
+        difficulty = 50.0,
         normal_item = "PlasmaRifleCompleted"
     ),
     "HeavyPlasma": X2WOTCLocationData(
@@ -87,7 +87,7 @@ vanilla_weapon_techs: dict[str, X2WOTCLocationData] = {
         id = get_new_location_id(),
         type = "Tech",
         tags = {"tree:PlasmaRifle"},
-        difficulty = 55.0,
+        difficulty = 60.0,
         normal_item = "HeavyPlasmaCompleted"
     ),
     "PlasmaSniper": X2WOTCLocationData(
@@ -95,7 +95,7 @@ vanilla_weapon_techs: dict[str, X2WOTCLocationData] = {
         id = get_new_location_id(),
         type = "Tech",
         tags = {"tree:PlasmaRifle", "tree:AutopsyArchon"},
-        difficulty = 55.0,
+        difficulty = 60.0,
         normal_item = "PlasmaSniperCompleted"
     ),
     "AlloyCannon": X2WOTCLocationData(
@@ -103,7 +103,7 @@ vanilla_weapon_techs: dict[str, X2WOTCLocationData] = {
         id = get_new_location_id(),
         type = "Tech",
         tags = {"tree:PlasmaRifle"},
-        difficulty = 55.0,
+        difficulty = 60.0,
         normal_item = "AlloyCannonCompleted"
     ),
 }
@@ -122,7 +122,7 @@ vanilla_armor_techs: dict[str, X2WOTCLocationData] = {
         id = get_new_location_id(),
         type = "Tech",
         tags = {"tree:HybridMaterials"},
-        difficulty = 25.0,
+        difficulty = 30.0,
         normal_item = "PlatedArmorCompleted"
     ),
     "PoweredArmor": X2WOTCLocationData(
@@ -130,7 +130,7 @@ vanilla_armor_techs: dict[str, X2WOTCLocationData] = {
         id = get_new_location_id(),
         type = "Tech",
         tags = {"tree:Tech_Elerium"},
-        difficulty = 45.0,
+        difficulty = 50.0,
         normal_item = "PoweredArmorCompleted"
     ),
 }
@@ -258,7 +258,7 @@ vanilla_goldenpath_techs: dict[str, X2WOTCLocationData] = {
         id = get_new_location_id(),
         type = "Tech",
         tags = {"goldenpath"},
-        difficulty = 5.0,
+        difficulty = 10.0,
         normal_item = "ResistanceCommunicationsCompleted"
     ),
     "AutopsyAdventOfficer": X2WOTCLocationData(
@@ -274,7 +274,7 @@ vanilla_goldenpath_techs: dict[str, X2WOTCLocationData] = {
         id = get_new_location_id(),
         type = "Tech",
         tags = {"goldenpath"},
-        difficulty = 20.0,
+        difficulty = 35.0,  # Blacksite mission and Codex kill are ~30
         normal_item = "AlienEncryptionCompleted"
     ),
     "CodexBrainPt1": X2WOTCLocationData(
@@ -282,7 +282,7 @@ vanilla_goldenpath_techs: dict[str, X2WOTCLocationData] = {
         id = get_new_location_id(),
         type = "Tech",
         tags = {"goldenpath", "autopsy", "shadow", "skulljack_officer"},
-        difficulty = 40.0,
+        difficulty = 45.0,  # Shadow chamber is ~40
         normal_item = "CodexBrainPt1Completed"
     ),
     "CodexBrainPt2": X2WOTCLocationData(
@@ -290,7 +290,7 @@ vanilla_goldenpath_techs: dict[str, X2WOTCLocationData] = {
         id = get_new_location_id(),
         type = "Tech",
         tags = {"goldenpath", "shadow", "tree:CodexBrainPt1"},
-        difficulty = 50.0,
+        difficulty = 55.0,
         normal_item = "CodexBrainPt2Completed"
     ),
     "BlacksiteData": X2WOTCLocationData(
@@ -298,7 +298,7 @@ vanilla_goldenpath_techs: dict[str, X2WOTCLocationData] = {
         id = get_new_location_id(),
         type = "Tech",
         tags = {"goldenpath", "shadow"},
-        difficulty = 30.0,
+        difficulty = 45.0,  # Shadow chamber is ~40
         normal_item = "BlacksiteDataCompleted"
     ),
     "ForgeStasisSuit": X2WOTCLocationData(
@@ -306,7 +306,7 @@ vanilla_goldenpath_techs: dict[str, X2WOTCLocationData] = {
         id = get_new_location_id(),
         type = "Tech",
         tags = {"goldenpath", "shadow"},
-        difficulty = 50.0,
+        difficulty = 55.0,  # Forge mission is ~50
         normal_item = "ForgeStasisSuitCompleted"
     ),
     "PsiGate": X2WOTCLocationData(
@@ -314,7 +314,7 @@ vanilla_goldenpath_techs: dict[str, X2WOTCLocationData] = {
         id = get_new_location_id(),
         type = "Tech",
         tags = {"goldenpath", "shadow"},
-        difficulty = 60.0,
+        difficulty = 65.0,  # Psi Gate mission is ~60
         normal_item = "PsiGateCompleted"
     ),
     "AutopsyAdventPsiWitch": X2WOTCLocationData(
@@ -322,7 +322,7 @@ vanilla_goldenpath_techs: dict[str, X2WOTCLocationData] = {
         id = get_new_location_id(),
         type = "Tech",
         tags = {"goldenpath", "autopsy", "shadow", "tree:ForgeStasisSuit", "tree:PsiGate", "skulljack_codex"},
-        difficulty = 70.0,
+        difficulty = 75.0,  # Avatar kill is ~70
         normal_item = "AutopsyAdventPsiWitchCompleted"
     ),
 }
@@ -341,7 +341,7 @@ vanilla_other_techs: dict[str, X2WOTCLocationData] = {
         id = get_new_location_id(),
         type = "Tech",
         tags = {"tree:GaussWeapons", "tree:PlatedArmor", "tree:AutopsyAdventMEC"},
-        difficulty = 35.0,
+        difficulty = 40.0,
         normal_item = "EleriumCompleted"
     ),
     "Psionics": X2WOTCLocationData(
@@ -422,7 +422,7 @@ wotc_autopsy_techs: dict[str, X2WOTCLocationData] = {
         id = get_new_location_id(),
         type = "Tech",
         tags = {"autopsy", "tree:AlienBiotech"},
-        difficulty = 15.0,  # Not shuffled
+        difficulty = 35.0,  # Not shuffled
         dlc = "WOTC",
         normal_item = "AutopsyTheLostCompleted"
     ),
@@ -442,7 +442,7 @@ wotc_chosen_weapon_techs: dict[str, X2WOTCLocationData] = {
         id = get_new_location_id(),
         type = "Tech",
         tags = {"defeat_assassin"},
-        difficulty = 80.0,
+        difficulty = 75.0,
         dlc = "WOTC",
         normal_item = "ChosenAssassinWeaponsCompleted"
     ),
@@ -451,7 +451,7 @@ wotc_chosen_weapon_techs: dict[str, X2WOTCLocationData] = {
         id = get_new_location_id(),
         type = "Tech",
         tags = {"defeat_hunter"},
-        difficulty = 80.0,
+        difficulty = 75.0,
         dlc = "WOTC",
         normal_item = "ChosenHunterWeaponsCompleted"
     ),
@@ -460,7 +460,7 @@ wotc_chosen_weapon_techs: dict[str, X2WOTCLocationData] = {
         id = get_new_location_id(),
         type = "Tech",
         tags = {"defeat_warlock"},
-        difficulty = 80.0,
+        difficulty = 75.0,
         dlc = "WOTC",
         normal_item = "ChosenWarlockWeaponsCompleted"
     ),
@@ -573,7 +573,7 @@ vanilla_enemy_kills: dict[str, X2WOTCLocationData] = {
         layer = "Tactical",
         type = "EnemyKill",
         tags = {"skulljack_codex"},
-        difficulty = 60.0  # Not shuffled
+        difficulty = 70.0  # Not shuffled
     ),
     "KillAdventStunLancer": X2WOTCLocationData(
         display_name = ENEMY_KILL_LOCATION_PREFIX + "ADVENT Stun Lancer",
@@ -672,7 +672,7 @@ wotc_enemy_kills: dict[str, X2WOTCLocationData] = {
         id = get_new_location_id(),
         layer = "Tactical",
         type = "EnemyKill",
-        difficulty = 15.0,  # Not shuffled
+        difficulty = 35.0,  # Not shuffled
         dlc = "WOTC"
     ),
     "KillSpectre": X2WOTCLocationData(
@@ -717,9 +717,21 @@ wotc_enemy_kills: dict[str, X2WOTCLocationData] = {
 ########################################################################################################################
 
 # Item use difficulties are primarily intended to prevent a location from being in logic way too early,
-# when it would be entirely unreasonable to have already acquired the necessary resources.
-# In most cases, they will be comparatively ruthless; as soon as the player can technically
-# build an item, they are expected to do so immediately and use it at the next opportunity.
+# when it would be unreasonable to have already acquired the necessary resources; ignoring however
+# the timing at which a player might *want* to build the item.
+# As an additional consideration, the proving ground will not be expected to have been built before
+# difficulty 25, and the time needed to complete any proving ground projects will also be factored in.
+# Also note that the wiki lies about Advanced Explosives, it does not actually require Experimental Grenade.
+#
+# Proving ground project abbreviations used below (all others are omitted):
+# PL  - Plasma Grenade
+# AE  - Advanced Explosives
+# BP  - Bluescreen Protocol
+# EG  - Experimental Grenade
+# EXO - E.X.O. Suit
+# EHW - Experimental Heavy Weapon
+# WAR - W.A.R. Suit
+# EPW - Experimental Powered Weapon
 
 #=======================================================================================================================
 #                                                 BASE GAME
@@ -732,7 +744,7 @@ vanilla_item_uses: dict[str, X2WOTCLocationData] = {
         layer = "Tactical",
         type = "ItemUse",
         tags = {"utility"},
-        difficulty = 0.0  # 35 supplies
+        difficulty = 5.0  # 35 supplies (but difficult to use so avoid sphere 1)
     ),
     "UseNanoMedikit": X2WOTCLocationData(
         display_name = ITEM_USE_LOCATION_PREFIX + "Nanomedikit",
@@ -740,7 +752,7 @@ vanilla_item_uses: dict[str, X2WOTCLocationData] = {
         layer = "Tactical",
         type = "ItemUse",
         tags = {"utility", "proving_ground", "item:AutopsyViperCompleted", "diff:Viper"},
-        difficulty = 25.0  # 100 supplies, 1 core, 3 corpses (1 PG project)
+        difficulty = 35.0  # 100 supplies, 1 core, 3 corpses (1 PG project)
     ),
     "UseSKULLJACK": X2WOTCLocationData(
         display_name = ITEM_USE_LOCATION_PREFIX + "Skulljack",
@@ -748,7 +760,7 @@ vanilla_item_uses: dict[str, X2WOTCLocationData] = {
         layer = "Tactical",
         type = "ItemUse",
         tags = {"utility", "proving_ground", "skulljack_officer"},
-        difficulty = 15.0  # 50 supplies (1 PG project)
+        difficulty = 30.0  # 50 supplies (1 PG project)
     ),
     "UseFragGrenade": X2WOTCLocationData(
         display_name = ITEM_USE_LOCATION_PREFIX + "Frag Grenade",
@@ -756,7 +768,7 @@ vanilla_item_uses: dict[str, X2WOTCLocationData] = {
         layer = "Tactical",
         type = "ItemUse",
         tags = {"grenade"},
-        difficulty = 0.0  # free
+        difficulty = 0.0  # Free
     ),
     "UseAlienGrenade": X2WOTCLocationData(
         display_name = ITEM_USE_LOCATION_PREFIX + "Plasma Grenade",
@@ -764,7 +776,7 @@ vanilla_item_uses: dict[str, X2WOTCLocationData] = {
         layer = "Tactical",
         type = "ItemUse",
         tags = {"grenade", "proving_ground", "item:AutopsyMutonCompleted"},
-        difficulty = 25.0  # 75 supplies, 1 cores, 5 alloys, 5 elerium (1 PG project)
+        difficulty = 35.0  # 75 supplies, 1 cores, 5 alloys, 5 elerium (1 PG project; PL)
     ),
     "UseProximityMine": X2WOTCLocationData(
         display_name = ITEM_USE_LOCATION_PREFIX + "Proximity Mine",
@@ -772,7 +784,7 @@ vanilla_item_uses: dict[str, X2WOTCLocationData] = {
         layer = "Tactical",
         type = "ItemUse",
         tags = {"grenade", "item:AutopsyAndromedonCompleted"},
-        difficulty = 5.0  # 100 supplies
+        difficulty = 10.0  # 100 supplies
     ),
     "UseFlashbangGrenade": X2WOTCLocationData(
         display_name = ITEM_USE_LOCATION_PREFIX + "Flashbang Grenade",
@@ -788,7 +800,7 @@ vanilla_item_uses: dict[str, X2WOTCLocationData] = {
         layer = "Tactical",
         type = "ItemUse",
         tags = {"grenade", "proving_ground", "item:AutopsyAdventMECCompleted"},
-        difficulty = 20.0  # 50 supplies, 1 core (1 PG project)
+        difficulty = 35.0  # 50 supplies, 1 core (1 PG project; BP)
     ),
     "UseEMPGrenadeMk2": X2WOTCLocationData(
         display_name = ITEM_USE_LOCATION_PREFIX + "EMP Bomb",
@@ -796,7 +808,7 @@ vanilla_item_uses: dict[str, X2WOTCLocationData] = {
         layer = "Tactical",
         type = "ItemUse",
         tags = {"grenade", "proving_ground", "item:AutopsyAdventMECCompleted", "item:AutopsyMutonCompleted"},
-        difficulty = 40.0  # 100 supplies, 2 cores, 5 alloys, 5 elerium (3 PG projects)
+        difficulty = 45.0  # 160 supplies, 2 cores, 10 alloys, 10 elerium (3 PG projects; PL + AE + BP)
     ),
     "UseSmokeGrenade": X2WOTCLocationData(
         display_name = ITEM_USE_LOCATION_PREFIX + "Smoke Grenade",
@@ -812,7 +824,7 @@ vanilla_item_uses: dict[str, X2WOTCLocationData] = {
         layer = "Tactical",
         type = "ItemUse",
         tags = {"grenade", "proving_ground", "item:AutopsyMutonCompleted"},
-        difficulty = 35.0  # 100 supplies, 2 cores, 5 alloys, 5 elerium (2 PG projects)
+        difficulty = 45.0  # 150 supplies, 2 cores, 10 alloys, 10 elerium (2 PG projects; PL + AE)
     ),
     "UseBattleScanner": X2WOTCLocationData(
         display_name = ITEM_USE_LOCATION_PREFIX + "Battle Scanner",
@@ -828,7 +840,7 @@ vanilla_item_uses: dict[str, X2WOTCLocationData] = {
         layer = "Tactical",
         type = "ItemUse",
         tags = {"utility", "item:AutopsyFacelessCompleted", "diff:Faceless"},
-        difficulty = 15.0  # 75 supplies, 2 corpses
+        difficulty = 10.0  # 75 supplies, 2 corpses
     ),
     "UseCombatStims": X2WOTCLocationData(
         display_name = ITEM_USE_LOCATION_PREFIX + "Overdrive Serum",
@@ -844,7 +856,7 @@ vanilla_item_uses: dict[str, X2WOTCLocationData] = {
         layer = "Tactical",
         type = "ItemUse",
         tags = {"ammo", "proving_ground", "item:AutopsyAdventMECCompleted"},
-        difficulty = 20.0  # 75 supplies, 1 core (1 PG project)
+        difficulty = 35.0  # 75 supplies, 1 core (1 PG project; BP)
     ),
     "UseExperimentalAmmo": X2WOTCLocationData(
         display_name = ITEM_USE_LOCATION_PREFIX + "Experimental Ammo",
@@ -852,7 +864,7 @@ vanilla_item_uses: dict[str, X2WOTCLocationData] = {
         layer = "Tactical",
         type = "ItemUse",
         tags = {"ammo", "proving_ground"},
-        difficulty = 15.0  # 1 core (1 PG project)
+        difficulty = 30.0  # 1 core (1 PG project)
     ),
     "UseExperimentalGrenade": X2WOTCLocationData(
         display_name = ITEM_USE_LOCATION_PREFIX + "Experimental Grenade",
@@ -860,7 +872,7 @@ vanilla_item_uses: dict[str, X2WOTCLocationData] = {
         layer = "Tactical",
         type = "ItemUse",
         tags = {"grenade", "proving_ground"},
-        difficulty = 15.0  # 1 core (1 PG project)
+        difficulty = 30.0  # 1 core (1 PG project; EG)
     ),
     "UseExperimentalGrenadeMk2": X2WOTCLocationData(
         display_name = ITEM_USE_LOCATION_PREFIX + "Experimental Bomb",
@@ -868,7 +880,7 @@ vanilla_item_uses: dict[str, X2WOTCLocationData] = {
         layer = "Tactical",
         type = "ItemUse",
         tags = {"grenade", "proving_ground", "item:AutopsyMutonCompleted"},
-        difficulty = 35.0  # 50 supplies, 2 cores, 5 alloys, 5 elerium (2 PG projects)
+        difficulty = 45.0  # 125 supplies, 3 cores, 10 alloys, 10 elerium (3 PG projects; PL + AE + EG)
     ),
     "UseRocketLauncher": X2WOTCLocationData(
         display_name = ITEM_USE_LOCATION_PREFIX + "Rocket Launcher",
@@ -876,7 +888,7 @@ vanilla_item_uses: dict[str, X2WOTCLocationData] = {
         layer = "Tactical",
         type = "ItemUse",
         tags = {"weapon", "proving_ground", "item:PlatedArmorCompleted", "diff:AdvTrooperM1", "diff:AdvTrooperM2", "diff:AdvTrooperM3"},
-        difficulty = 25.0  # 1 core, 5 alloys, 5 elerium, 2 corpses (1 PG project)
+        difficulty = 35.0  # 1 core, 5 alloys, 5 elerium, 2 corpses (1 PG project; EXO)
     ),
     "UseExperimentalHeavyWeapon": X2WOTCLocationData(
         display_name = ITEM_USE_LOCATION_PREFIX + "Experimental Heavy Weapon",
@@ -884,7 +896,7 @@ vanilla_item_uses: dict[str, X2WOTCLocationData] = {
         layer = "Tactical",
         type = "ItemUse",
         tags = {"weapon", "proving_ground", "item:PlatedArmorCompleted", "diff:AdvTrooperM1", "diff:AdvTrooperM2", "diff:AdvTrooperM3"},
-        difficulty = 35.0  # 2 cores, 5 alloys, 5 elerium, 2 corpses (2 PG projects)
+        difficulty = 40.0  # 2 cores, 5 alloys, 5 elerium, 2 corpses (2 PG projects; EXO + EHW)
     ),
     "UseExperimentalPoweredWeapon": X2WOTCLocationData(
         display_name = ITEM_USE_LOCATION_PREFIX + "Experimental Powered Weapon",
@@ -892,7 +904,7 @@ vanilla_item_uses: dict[str, X2WOTCLocationData] = {
         layer = "Tactical",
         type = "ItemUse",
         tags = {"weapon", "proving_ground", "item:PoweredArmorCompleted"},
-        difficulty = 40.0  # 100 supplies, 2 cores, 10 alloys, 5 elerium (2 PG projects)
+        difficulty = 50.0  # 100 supplies, 2 cores, 10 alloys, 5 elerium (2 PG projects; WAR + EPW)
     ),
 }
 
@@ -907,7 +919,7 @@ alien_hunters_item_uses: dict[str, X2WOTCLocationData] = {
         layer = "Tactical",
         type = "ItemUse",
         tags = {"grenade", "proving_ground", "item:ExperimentalWeaponsCompleted"},
-        difficulty = 10.0,  # 35 supplies (1 PG project)
+        difficulty = 30.0,  # 35 supplies (1 PG project)
         dlc = "AH"
     ),
 }
@@ -932,7 +944,7 @@ wotc_item_uses: dict[str, X2WOTCLocationData] = {
         layer = "Tactical",
         type = "ItemUse",
         tags = {"utility", "item:AutopsySpectreCompleted", "diff:SpectreM1", "diff:SpectreM2"},
-        difficulty = 5.0,  # 50 supplies, 1 corpse
+        difficulty = 10.0,  # 50 supplies, 1 corpse
         dlc = "WOTC"
     ),
 }
@@ -976,7 +988,7 @@ spark_soldier_ranks: dict[str, X2WOTCLocationData] = {
         type = "SoldierRank",
         tags = {"spark", "proving_ground", f"item:SparkRank:{rank - 1}"},
         dlc = "SLG",
-        difficulty = 35.0,  # 100 supplies, 2 cores, 20 alloys, 15 elerium (1 PG project)
+        difficulty = 40.0,  # 100 supplies, 2 cores, 20 alloys, 15 elerium (1 PG project)
         normal_item = "SparkRank"
     )
     for (rank, rank_name) in [

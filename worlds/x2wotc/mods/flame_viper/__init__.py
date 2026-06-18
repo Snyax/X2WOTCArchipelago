@@ -33,7 +33,7 @@ locations: dict[str, X2WOTCLocationData] = {
         layer = "Strategy",
         type = "Tech",
         tags = {"autopsy", "tree:AlienBiotech"},
-        difficulty = 27.0,  # FL 6
+        difficulty = 28.0,  # FL 6
         normal_item = "Autops_AshFlameViperCompleted"
     ),
     "KillAshFlameViper": X2WOTCLocationData(

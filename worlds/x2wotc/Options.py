@@ -191,8 +191,7 @@ class ChosenWeaponFragments(Choice):
 
 
 class EarlyProvingGround(Toggle):
-    """Force the Proving Ground to be unlockable very early (sphere 1).
-    This ensures access to many powerful items but may significantly increase the amount of reachable locations."""
+    """Force the Proving Ground to be unlockable very early (sphere 1)."""
     display_name = "Early Proving Ground"
     default = True
 
