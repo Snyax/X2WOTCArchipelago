@@ -220,7 +220,7 @@ def generate_early(world: "X2WOTCWorld"):
         ("KillViperKing", 90.0),
         ("KillBerserkerQueen", 90.0),
         ("KillArchonKing", 90.0),
-        ("KillTheLost", fl_to_diff(5)),
+        ("KillTheLost", fl_to_diff(10)),
         ("UseBattleScanner", fl_to_diff_pg(1)),
         ("UseNanoMedikit", fl_to_diff_pg(3)),
         ("UseEMPGrenade", fl_to_diff_pg(4)),
