@@ -43,6 +43,22 @@ def get_slot_info(slot: int) -> NetworkSlot | None:
         logger.debug(f"Proxy: No slot {slot}")
         return None
 
+# Resolve APworld mod location mapping
+def mod_loc_map(loc_name: str) -> str:
+    for mod_data in reversed(mods_data):
+        if mod_data.name in ctx.active_mods and loc_name in mod_data.location_map:
+            loc_name = mod_data.location_map[loc_name]
+            break
+    return loc_name
+
+# Resolve APWorld mod item mapping
+def mod_item_map(item_name: str) -> str:
+    for mod_data in reversed(mods_data):
+        if mod_data.name in ctx.active_mods and item_name in mod_data.item_map:
+            item_name = mod_data.item_map[item_name]
+            break
+    return item_name
+
 # ----------------------------------------------------- SCOUT -------------------------------------------------------- #
 
 async def scout_loop():
@@ -116,13 +132,6 @@ def get_locations_info(checks: list[str]) -> LocationsInfo:
 
 async def send_checks(checks: list[str], connected: bool = True):
     for loc_name in checks:
-
-        # Resolve APworld mod location mapping
-        for mod_data in reversed(mods_data):
-            if mod_data.name in ctx.active_mods and loc_name in mod_data.location_map:
-                loc_name = mod_data.location_map[loc_name]
-                break
-
         try:
             loc_id = location_table[loc_name].id
         except KeyError:
@@ -183,12 +192,6 @@ def get_received_items(layer: str, number_received: int) -> ItemsInfo:
                 if stage is not None:
                     item_name = stage
 
-        # Resolve APWorld mod item mapping
-        for mod_data in reversed(mods_data):
-            if mod_data.name in ctx.active_mods and item_name in mod_data.item_map:
-                item_name = mod_data.item_map[item_name]
-                break
-
         slot_info = get_slot_info(network_item.player)
         items_info.append((item_name, network_item, slot_info))
 
@@ -202,6 +205,7 @@ def get_received_items(layer: str, number_received: int) -> ItemsInfo:
 
 async def handle_check(request: web.Request):
     checks = [check for check in request.match_info["tail"].split("/") if check != ""]
+    checks = [mod_loc_map(check) for check in checks]
 
     if not ctx.connected.is_set():
         await send_checks(checks, connected=False)
@@ -274,6 +278,7 @@ def handle_tick(layer: str, number_received: int) -> str:
         response_body += "\n\n"
 
         item_data = item_table[item_name]
+        item_name = mod_item_map(item_name)
 
         # Info for the game to process
         if item_data.stages is None:
