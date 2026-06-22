@@ -77,12 +77,21 @@ lwotc_techs: dict[str, X2WOTCLocationData] = {
         difficulty = fl_to_diff(5),
         normal_item = "AdvancedLasersCompleted"
     ),
+    "_GaussWeapons_LW": X2WOTCLocationData(
+        display_name = TECH_LOCATION_PREFIX + "Advanced Magnetic Weapons",
+        id = get_new_location_id(),
+        layer = "Strategy",
+        type = "Tech",
+        tags = {"tree:MagnetizedWeapons"},
+        difficulty = fl_to_diff(9),
+        normal_item = "_GaussWeaponsCompleted_LW"
+    ),
     "Coilguns": X2WOTCLocationData(
         display_name = TECH_LOCATION_PREFIX + "Coilguns",
         id = get_new_location_id(),
         layer = "Strategy",
         type = "Tech",
-        tags = {"tree:GaussWeapons"},
+        tags = {"tree:_GaussWeapons_LW", "tree:Tech_Elerium"},
         difficulty = fl_to_diff(13),
         normal_item = "CoilgunsCompleted"
     ),

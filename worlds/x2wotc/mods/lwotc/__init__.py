@@ -7,12 +7,27 @@ from BaseClasses import ItemClassification as IC
 if TYPE_CHECKING:
     from worlds.x2wotc import X2WOTCWorld
 
-from .Items import items, lwotc_filler_items
+from .Items import items, lwotc_pcs_items, lwotc_weapon_mod_items, TECH_ITEM_PREFIX
 from .Locations import locations, fl_to_diff, fl_to_diff_autopsy, fl_to_diff_pg, PG_GRENADE, PG_GRENADE_M2
 from .Rules import set_rules
 
 
 name = "Long War of the Chosen"
+location_map = {
+    "GaussWeapons": "_GaussWeapons_LW",
+}
+item_map = {
+    "_GaussWeaponsCompleted_LW": "GaussWeaponsCompleted",
+    "_AimUpgrade_Sup_LW:1": "AimUpgrade_Sup:1",
+    "_CritUpgrade_Sup_LW:1": "CritUpgrade_Sup:1",
+    "_ReloadUpgrade_Sup_LW:1": "ReloadUpgrade_Sup:1",
+    "_MissDamageUpgrade_Sup_LW:1": "MissDamageUpgrade_Sup:1",
+    "_FreeFireUpgrade_Sup_LW:1": "FreeFireUpgrade_Sup:1",
+    "_ClipSizeUpgrade_Sup_LW:1": "ClipSizeUpgrade_Sup:1",
+    "_FreeKillUpgrade_Bsc_LW:1": "FreeKillUpgrade_Bsc:1",
+    "_FreeKillUpgrade_Adv_LW:1": "FreeKillUpgrade_Adv:1",
+    "_FreeKillUpgrade_Sup_LW:1": "FreeKillUpgrade_Sup:1",
+}
 
 # For defining the order rules are applied in (in case of set_rule)
 # The order is lowest to highest priority
@@ -76,6 +91,33 @@ def generate_early(world: "X2WOTCWorld"):
             world.item_manager.item_table["AutopsyAdventTrooperCompleted"].display_name
         ] = 1
 
+    # Gauss Weapons is called Advanced Magnetic Weapons
+    world.loc_manager.disable_location("GaussWeapons")
+    world.item_manager.disable_item("GaussWeaponsCompleted")
+
+    # Repeaters are called Suppressors, Superior attachments are called Elite
+    world.item_manager.weapon_mod_items.difference_update([
+        "AimUpgrade_Sup:1",
+        "CritUpgrade_Sup:1",
+        "ReloadUpgrade_Sup:1",
+        "MissDamageUpgrade_Sup:1",
+        "FreeFireUpgrade_Sup:1",
+        "ClipSizeUpgrade_Sup:1",
+        "FreeKillUpgrade_Bsc:1",
+        "FreeKillUpgrade_Adv:1",
+        "FreeKillUpgrade_Sup:1",
+        "_AimUpgrade_Sup_LW:1",
+        "_CritUpgrade_Sup_LW:1",
+        "_ReloadUpgrade_Sup_LW:1",
+        "_MissDamageUpgrade_Sup_LW:1",
+        "_FreeFireUpgrade_Sup_LW:1",
+        "_ClipSizeUpgrade_Sup_LW:1",
+        "_FreeKillUpgrade_Bsc_LW:1",
+        "_FreeKillUpgrade_Adv_LW:1",
+        "_FreeKillUpgrade_Sup_LW:1",
+    ])
+
+
     # Rocket Launcher is a squaddie Technical skill
     world.loc_manager.disable_location("UseRocketLauncher")
 
@@ -94,8 +136,8 @@ def generate_early(world: "X2WOTCWorld"):
     # Force Level increases by off-world reinforcements which requires special handling
     world.item_manager.trap_items.discard("ForceLevel:1")
 
-    # Patch LWOTC fillers into item pool
-    world.item_manager.pcs_items.update(set(lwotc_filler_items.keys()))
+    # Patch LWOTC PCSes into item pool
+    world.item_manager.pcs_items.update(set(lwotc_pcs_items.keys()))
 
     for item, cat in [
         ("ModularWeaponsCompleted", IC.progression | IC.useful),
@@ -123,7 +165,7 @@ def generate_early(world: "X2WOTCWorld"):
         ("AutopsyViperKing", {"autopsy", "kill_ruler", "tree:AutopsyViper"}),
         ("AutopsyBerserkerQueen", {"autopsy", "kill_ruler", "tree:AutopsyBerserker"}),
         ("AutopsyArchonKing", {"autopsy", "kill_ruler", "tree:AutopsyArchon"}),
-        ("Tech_Elerium", {"tree:HybridMaterials", "tree:GaussWeapons", "tree:PlatedArmor"}),
+        ("Tech_Elerium", {"tree:HybridMaterials", "tree:_GaussWeapons_LW", "tree:PlatedArmor"}),
         ("UseBattleScanner", {"utility", "proving_ground", "item:HybridMaterialsCompleted"}),
         ("UseAlienGrenade", PG_GRENADE | {"item:AutopsyMutonCompleted"}),
         ("UseEMPGrenade", PG_GRENADE | {"item:AutopsyAdventMECCompleted"}),
@@ -146,7 +188,6 @@ def generate_early(world: "X2WOTCWorld"):
     for loc, diff in [
         ("Psionics", fl_to_diff(4)),
         ("MagnetizedWeapons", fl_to_diff(7)),
-        ("GaussWeapons", fl_to_diff(9)),
         ("PlatedArmor", fl_to_diff(9)),
         ("Tech_Elerium", fl_to_diff(11)),
         ("PlasmaRifle", fl_to_diff(17)),

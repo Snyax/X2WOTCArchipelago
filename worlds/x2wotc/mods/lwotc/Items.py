@@ -1,6 +1,6 @@
 from BaseClasses import ItemClassification as IC
 
-from worlds.x2wotc.ItemData import X2WOTCItemData, TECH_ITEM_PREFIX, PCS_ITEM_PREFIX, get_new_item_id
+from worlds.x2wotc.ItemData import X2WOTCItemData, TECH_ITEM_PREFIX, PCS_ITEM_PREFIX, WEAPON_MOD_ITEM_PREFIX, get_new_item_id
 
 
 # For the full definition of X2WOTCItemData, see worlds/x2wotc/ItemData.py
@@ -22,6 +22,15 @@ lwotc_items: dict[str, X2WOTCItemData] = {
         tags = {"weapon"},
         power = 50.0,
         normal_location = "AdvancedLasers"
+    ),
+    "_GaussWeaponsCompleted_LW": X2WOTCItemData(
+        display_name = TECH_ITEM_PREFIX + "Advanced Magnetic Weapons",
+        id = get_new_item_id(),
+        classification = IC.progression | IC.useful,
+        type = "TechCompleted",
+        tags = {"weapon"},
+        power = 100.0,
+        normal_location = "_GaussWeapons_LW"
     ),
     "CoilgunsCompleted": X2WOTCItemData(
         display_name = TECH_ITEM_PREFIX + "Coilguns",
@@ -169,7 +178,7 @@ lwotc_items: dict[str, X2WOTCItemData] = {
     ),
 }
 
-lwotc_filler_items: dict[str, X2WOTCItemData] = {
+lwotc_pcs_items: dict[str, X2WOTCItemData] = {
     "DepthPerceptionPCS:1": X2WOTCItemData(
         display_name = PCS_ITEM_PREFIX + "Depth Perception",
         id = get_new_item_id(),
@@ -299,7 +308,74 @@ lwotc_filler_items: dict[str, X2WOTCItemData] = {
     ),
 }
 
+lwotc_weapon_mod_items: dict[str, X2WOTCItemData] = {
+    "_AimUpgrade_Sup_LW:1": X2WOTCItemData(
+        display_name = WEAPON_MOD_ITEM_PREFIX + "Elite Scope",
+        id = get_new_item_id(),
+        classification = IC.useful,
+        type = "Resource",
+        tags = {"filler", "weapon_mod", "scope", "superior"}
+    ),
+    "_CritUpgrade_Sup_LW:1": X2WOTCItemData(
+        display_name = WEAPON_MOD_ITEM_PREFIX + "Elite Laser Sight",
+        id = get_new_item_id(),
+        classification = IC.useful,
+        type = "Resource",
+        tags = {"filler", "weapon_mod", "laser_sight", "superior"}
+    ),
+    "_ReloadUpgrade_Sup_LW:1": X2WOTCItemData(
+        display_name = WEAPON_MOD_ITEM_PREFIX + "Elite Auto-Loader",
+        id = get_new_item_id(),
+        classification = IC.useful,
+        type = "Resource",
+        tags = {"filler", "weapon_mod", "auto_loader", "superior"}
+    ),
+    "_MissDamageUpgrade_Sup_LW:1": X2WOTCItemData(
+        display_name = WEAPON_MOD_ITEM_PREFIX + "Elite Stock",
+        id = get_new_item_id(),
+        classification = IC.useful,
+        type = "Resource",
+        tags = {"filler", "weapon_mod", "stock", "superior"}
+    ),
+    "_FreeFireUpgrade_Sup_LW:1": X2WOTCItemData(
+        display_name = WEAPON_MOD_ITEM_PREFIX + "Elite Hair Trigger",
+        id = get_new_item_id(),
+        classification = IC.useful,
+        type = "Resource",
+        tags = {"filler", "weapon_mod", "hair_trigger", "superior"}
+    ),
+    "_ClipSizeUpgrade_Sup_LW:1": X2WOTCItemData(
+        display_name = WEAPON_MOD_ITEM_PREFIX + "Elite Expanded Magazine",
+        id = get_new_item_id(),
+        classification = IC.useful,
+        type = "Resource",
+        tags = {"filler", "weapon_mod", "expanded_magazine", "superior"}
+    ),
+    "_FreeKillUpgrade_Bsc_LW:1": X2WOTCItemData(
+        display_name = WEAPON_MOD_ITEM_PREFIX + "Basic Suppressor",
+        id = get_new_item_id(),
+        classification = IC.useful,
+        type = "Resource",
+        tags = {"filler", "weapon_mod", "repeater", "basic"}
+    ),
+    "_FreeKillUpgrade_Adv_LW:1": X2WOTCItemData(
+        display_name = WEAPON_MOD_ITEM_PREFIX + "Advanced Suppressor",
+        id = get_new_item_id(),
+        classification = IC.useful,
+        type = "Resource",
+        tags = {"filler", "weapon_mod", "repeater", "advanced"}
+    ),
+    "_FreeKillUpgrade_Sup_LW:1": X2WOTCItemData(
+        display_name = WEAPON_MOD_ITEM_PREFIX + "Elite Suppressor",
+        id = get_new_item_id(),
+        classification = IC.useful,
+        type = "Resource",
+        tags = {"filler", "weapon_mod", "repeater", "superior"}
+    ),
+}
+
 items: dict[str, X2WOTCItemData] = {
     **lwotc_items,
-    **lwotc_filler_items
+    **lwotc_pcs_items,
+    **lwotc_weapon_mod_items,
 }
