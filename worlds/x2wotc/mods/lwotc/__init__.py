@@ -37,6 +37,12 @@ rule_priority = 0.0
 def generate_early(world: "X2WOTCWorld"):
 
     # Ranksanity not supported
+    for loc_name, loc_data in world.loc_manager.location_table.items():
+        if loc_data.type == "SoldierRank":
+            world.loc_manager.disable_location(loc_name)
+    for item_name, item_data in world.item_manager.item_table.items():
+        if item_data.type == "Promotion":
+            world.item_manager.disable_item(item_name)
     if world.options.rank_sanity != "none" or world.options.global_promotions:
         world.options.rank_sanity.value = world.options.rank_sanity.option_none
         world.options.global_promotions.value = False
@@ -48,8 +54,8 @@ def generate_early(world: "X2WOTCWorld"):
         warning(f"X2WOTC: Ignoring mission skips for player {world.player_name} because the mod 'Long War of the Chosen' is enabled")
 
     # Enemy rando not supported
-    for key, value in world.loc_manager.location_table.items():
-        world.loc_manager.replace(key, tags={tag for tag in value.tags if not tag.startswith("diff:")})
+    for loc_name, loc_data in world.loc_manager.location_table.items():
+        world.loc_manager.replace(loc_name, tags={tag for tag in loc_data.tags if not tag.startswith("diff:")})
     if world.options.enemy_rando:
         world.options.enemy_rando.value = False
         world.enemy_rando_manager.enemy_shuffle.sort()

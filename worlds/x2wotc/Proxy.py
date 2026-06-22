@@ -204,8 +204,7 @@ def get_received_items(layer: str, number_received: int) -> ItemsInfo:
 # ----------------------------------------------------- CHECK -------------------------------------------------------- #
 
 async def handle_check(request: web.Request):
-    checks = [check for check in request.match_info["tail"].split("/") if check != ""]
-    checks = [mod_loc_map(check) for check in checks]
+    checks = [mod_loc_map(check) for check in request.match_info["tail"].split("/") if check != ""]
 
     if not ctx.connected.is_set():
         await send_checks(checks, connected=False)
@@ -232,7 +231,7 @@ async def handle_check(request: web.Request):
         elif network_item is None:
             logger.debug(f"Proxy: Location {loc_name} disabled, regular item found")
             item_data = item_table[item_name]
-            response_body += f"[{item_data.type}]{item_name}\n"
+            response_body += f"[{item_data.type}]{mod_item_map(item_name)}\n"
             response_body += f"Regular Item Found\n"
             response_body += f"Found your {item_data.display_name}!"
 
@@ -282,7 +281,7 @@ def handle_tick(layer: str, number_received: int) -> str:
 
         # Info for the game to process
         if item_data.stages is None:
-            response_body += f"[{item_data.type}]{item_name}\n"
+            response_body += f"[{item_data.type}]{mod_item_map(item_name)}\n"
 
         if network_item.player == ctx.slot:
             response_body += "Archipelago Item Received\n"
