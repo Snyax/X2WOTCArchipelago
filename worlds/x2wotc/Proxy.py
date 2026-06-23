@@ -277,7 +277,6 @@ def handle_tick(layer: str, number_received: int) -> str:
         response_body += "\n\n"
 
         item_data = item_table[item_name]
-        item_name = mod_item_map(item_name)
 
         # Info for the game to process
         if item_data.stages is None:

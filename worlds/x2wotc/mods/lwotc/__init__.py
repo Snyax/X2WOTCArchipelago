@@ -7,7 +7,7 @@ from BaseClasses import ItemClassification as IC
 if TYPE_CHECKING:
     from worlds.x2wotc import X2WOTCWorld
 
-from .Items import items, lwotc_pcs_items, lwotc_weapon_mod_items, TECH_ITEM_PREFIX
+from .Items import items, lwotc_pcs_items, lwotc_weapon_mod_items
 from .Locations import locations, fl_to_diff, fl_to_diff_autopsy, fl_to_diff_pg, PG_GRENADE, PG_GRENADE_M2
 from .Rules import set_rules
 
@@ -112,17 +112,8 @@ def generate_early(world: "X2WOTCWorld"):
         "FreeKillUpgrade_Bsc:1",
         "FreeKillUpgrade_Adv:1",
         "FreeKillUpgrade_Sup:1",
-        "_AimUpgrade_Sup_LW:1",
-        "_CritUpgrade_Sup_LW:1",
-        "_ReloadUpgrade_Sup_LW:1",
-        "_MissDamageUpgrade_Sup_LW:1",
-        "_FreeFireUpgrade_Sup_LW:1",
-        "_ClipSizeUpgrade_Sup_LW:1",
-        "_FreeKillUpgrade_Bsc_LW:1",
-        "_FreeKillUpgrade_Adv_LW:1",
-        "_FreeKillUpgrade_Sup_LW:1",
     ])
-
+    world.item_manager.weapon_mod_items.update(set(lwotc_weapon_mod_items.keys()))
 
     # Rocket Launcher is a squaddie Technical skill
     world.loc_manager.disable_location("UseRocketLauncher")

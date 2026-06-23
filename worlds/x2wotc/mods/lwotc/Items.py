@@ -266,7 +266,7 @@ lwotc_pcs_items: dict[str, X2WOTCItemData] = {
         id = get_new_item_id(),
         type = "Resource",
         classification = IC.useful,
-        tags = {"filler", "pcs", "superior", "defense"},
+        tags = {"filler", "pcs", "superior", "elite", "defense"},
     ),
     "CommonPCSPsi:1": X2WOTCItemData(
         display_name = PCS_ITEM_PREFIX + "Basic Psi",
@@ -285,7 +285,7 @@ lwotc_pcs_items: dict[str, X2WOTCItemData] = {
         id = get_new_item_id(),
         type = "Resource",
         classification = IC.useful,
-        tags = {"filler", "pcs", "superior", "psi"},
+        tags = {"filler", "pcs", "superior", "elite", "psi"},
     ),
     "CommonPCSHacking:1": X2WOTCItemData(
         display_name = PCS_ITEM_PREFIX + "Basic Hacking",
@@ -304,7 +304,7 @@ lwotc_pcs_items: dict[str, X2WOTCItemData] = {
         id = get_new_item_id(),
         type = "Resource",
         classification = IC.useful,
-        tags = {"filler", "pcs", "superior", "hacking"},
+        tags = {"filler", "pcs", "superior", "elite", "hacking"},
     ),
 }
 
@@ -314,63 +314,61 @@ lwotc_weapon_mod_items: dict[str, X2WOTCItemData] = {
         id = get_new_item_id(),
         classification = IC.useful,
         type = "Resource",
-        tags = {"filler", "weapon_mod", "scope", "superior"}
+        tags = {"filler", "weapon_mod", "scope", "superior", "elite"}
     ),
     "_CritUpgrade_Sup_LW:1": X2WOTCItemData(
         display_name = WEAPON_MOD_ITEM_PREFIX + "Elite Laser Sight",
         id = get_new_item_id(),
         classification = IC.useful,
         type = "Resource",
-        tags = {"filler", "weapon_mod", "laser_sight", "superior"}
+        tags = {"filler", "weapon_mod", "laser_sight", "superior", "elite"}
     ),
     "_ReloadUpgrade_Sup_LW:1": X2WOTCItemData(
         display_name = WEAPON_MOD_ITEM_PREFIX + "Elite Auto-Loader",
         id = get_new_item_id(),
         classification = IC.useful,
         type = "Resource",
-        tags = {"filler", "weapon_mod", "auto_loader", "superior"}
+        tags = {"filler", "weapon_mod", "auto_loader", "superior", "elite"}
     ),
     "_MissDamageUpgrade_Sup_LW:1": X2WOTCItemData(
         display_name = WEAPON_MOD_ITEM_PREFIX + "Elite Stock",
         id = get_new_item_id(),
         classification = IC.useful,
         type = "Resource",
-        tags = {"filler", "weapon_mod", "stock", "superior"}
+        tags = {"filler", "weapon_mod", "stock", "superior", "elite"}
     ),
     "_FreeFireUpgrade_Sup_LW:1": X2WOTCItemData(
         display_name = WEAPON_MOD_ITEM_PREFIX + "Elite Hair Trigger",
         id = get_new_item_id(),
         classification = IC.useful,
         type = "Resource",
-        tags = {"filler", "weapon_mod", "hair_trigger", "superior"}
+        tags = {"filler", "weapon_mod", "hair_trigger", "superior", "elite"}
     ),
     "_ClipSizeUpgrade_Sup_LW:1": X2WOTCItemData(
         display_name = WEAPON_MOD_ITEM_PREFIX + "Elite Expanded Magazine",
         id = get_new_item_id(),
         classification = IC.useful,
         type = "Resource",
-        tags = {"filler", "weapon_mod", "expanded_magazine", "superior"}
+        tags = {"filler", "weapon_mod", "expanded_magazine", "superior", "elite"}
     ),
     "_FreeKillUpgrade_Bsc_LW:1": X2WOTCItemData(
         display_name = WEAPON_MOD_ITEM_PREFIX + "Basic Suppressor",
         id = get_new_item_id(),
-        classification = IC.useful,
         type = "Resource",
-        tags = {"filler", "weapon_mod", "repeater", "basic"}
+        tags = {"filler", "weapon_mod", "repeater", "suppressor", "basic"}
     ),
     "_FreeKillUpgrade_Adv_LW:1": X2WOTCItemData(
         display_name = WEAPON_MOD_ITEM_PREFIX + "Advanced Suppressor",
         id = get_new_item_id(),
-        classification = IC.useful,
         type = "Resource",
-        tags = {"filler", "weapon_mod", "repeater", "advanced"}
+        tags = {"filler", "weapon_mod", "repeater", "suppressor", "advanced"}
     ),
     "_FreeKillUpgrade_Sup_LW:1": X2WOTCItemData(
         display_name = WEAPON_MOD_ITEM_PREFIX + "Elite Suppressor",
         id = get_new_item_id(),
         classification = IC.useful,
         type = "Resource",
-        tags = {"filler", "weapon_mod", "repeater", "superior"}
+        tags = {"filler", "weapon_mod", "repeater", "suppressor", "superior", "elite"}
     ),
 }
 
