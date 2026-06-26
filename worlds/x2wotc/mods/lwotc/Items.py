@@ -85,7 +85,7 @@ lwotc_items: dict[str, X2WOTCItemData] = {
         tags = {"weapon", "progressive"},
         stages = [
             "AdvancedLasersCompleted",
-            "GaussWeaponsCompleted",
+            "_GaussWeaponsCompleted_LW",
             "AdvancedCoilgunsCompleted",
         ]
     ),
