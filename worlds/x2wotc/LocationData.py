@@ -9,6 +9,17 @@ ITEM_USE_LOCATION_PREFIX = "Use "
 SOLDIER_RANK_LOCATION_PREFIX = "Promote "
 SOLDIER_RANK_LOCATION_INFIX = " to "
 COVERT_ACTION_LOCATION_PREFIX = "Complete "
+DEFAULT_RANK_NAME_SET = [
+    "Rookie",
+    "Squaddie",
+    "Corporal",
+    "Sergeant",
+    "Lieutenant",
+    "Captain",
+    "Major",
+    "Colonel",
+    "Brigadier",
+]
 
 
 class X2WOTCLocationData(NamedTuple):
@@ -971,14 +982,7 @@ human_soldier_ranks: dict[str, X2WOTCLocationData] = {
         ("Skirmisher", "WOTC"),
         ("Templar", "WOTC"),
     ]
-    for (rank, rank_name) in [
-        (2, "Corporal"),
-        (3, "Sergeant"),
-        (4, "Lieutenant"),
-        (5, "Captain"),
-        (6, "Major"),
-        (7, "Colonel"),
-    ]
+    for (rank, rank_name) in zip(range(2, 8), DEFAULT_RANK_NAME_SET)
 }
 
 spark_soldier_ranks: dict[str, X2WOTCLocationData] = {
