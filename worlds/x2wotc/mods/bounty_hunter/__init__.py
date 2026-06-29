@@ -11,9 +11,6 @@ name = "Iridar's Bounty Hunter Class"
 
 rule_priority = 0.0
 
-def generate_early(world: "X2WOTCWorld"):
-    world.options.rank_sanity.faction_hero_tags.add("bounty_hunter")
-
 RANKS_STR = ", ".join(f"Ranks[{i-2}]={i}" for i in range(2, MAX_RANK+1))
 config: dict[str, str] = {
     "WOTCArchipelago_Ranksanity": f"+RanksanityData=(ID=\"BountyHunter\", ClassName=\"BountyHunter\", \\\\\n{RANKS_STR})\n"

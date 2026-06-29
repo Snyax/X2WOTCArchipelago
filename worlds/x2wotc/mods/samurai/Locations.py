@@ -9,14 +9,13 @@ from worlds.x2wotc.LocationData import (
 MAX_RANK = 7
 
 locations: dict[str, X2WOTCLocationData] = {
-    f"BountyHunterRank{rank}": X2WOTCLocationData(
-        display_name = SOLDIER_RANK_LOCATION_PREFIX + "Bounty Hunter" + SOLDIER_RANK_LOCATION_INFIX + DEFAULT_RANK_NAME_SET[rank],
+    f"SamuraiRank{rank}": X2WOTCLocationData(
+        display_name = SOLDIER_RANK_LOCATION_PREFIX + "Samurai" + SOLDIER_RANK_LOCATION_INFIX + DEFAULT_RANK_NAME_SET[rank],
         id = get_new_location_id(),
         type = "SoldierRank",
-        tags = {"bounty_hunter", f"item:BountyHunterRank:{rank - 1}"},
-        difficulty = 10.0,  # You get one out of a CA
+        tags = {"samurai", f"item:SamuraiRank:{rank - 1}"},
         dlc = None,
-        normal_item = "BountyHunterRank"
+        normal_item = "SamuraiRank"
     )
     for rank in range(2, MAX_RANK + 1)
 }
