@@ -4,7 +4,9 @@ from worlds.x2wotc.LocationData import (
     TECH_LOCATION_PREFIX,
     ENEMY_KILL_LOCATION_PREFIX,
     ENEMY_DESTROY_LOCATION_PREFIX,
-    ITEM_USE_LOCATION_PREFIX
+    ITEM_USE_LOCATION_PREFIX,
+    SOLDIER_RANK_LOCATION_PREFIX,
+    SOLDIER_RANK_LOCATION_INFIX,
 )
 
 
@@ -39,6 +41,42 @@ PG_AMMO = {
     "proving_ground",
     "item:HybridMaterialsCompleted",
 }
+
+RANK_NAMES = [
+    "Rookie",
+    "Squaddie",
+    "Lance Corporal",
+    "Corporal",
+    "Sergeant",
+    "Staff Sergeant",
+    "Tech Sergeant",
+    "Gunnery Sergeant",
+    "Master Sergeant",
+]
+
+PSI_RANK_NAMES = [
+    "Rookie",
+    "Initiate",
+    "Acolyte",
+    "Adept",
+    "Disciple",
+    "Mystic",
+    "Warlock",
+    "Magus",
+    "Master",
+]
+
+SPARK_RANK_NAMES = [
+    "Rookie",
+    "Squire",
+    "Aspirant",
+    "Knight",
+    "Cavalier",
+    "Vanguard",
+    "Paladin",
+    "Champion",
+    "Templar",
+]
 
 lwotc_techs: dict[str, X2WOTCLocationData] = {
     "AutopsyDrone": X2WOTCLocationData(
@@ -460,8 +498,51 @@ lwotc_enemy_kills: dict[str, X2WOTCLocationData] = {
     ),
 }
 
+lwotc_native_soldier_ranks: dict[str, X2WOTCLocationData] = {
+    f"LWS_{class_name.title()}Rank{rank}": X2WOTCLocationData(
+        display_name = SOLDIER_RANK_LOCATION_PREFIX + "LW " + class_name + SOLDIER_RANK_LOCATION_INFIX + rank_name_set[rank],
+        id = get_new_location_id(),
+        type = "SoldierRank",
+        tags = {f"{class_name.lower()}", f"item:LWS_{class_name.title()}Rank:{rank - 1}"},
+        dlc = None,
+        normal_item = f"LWS_{class_name.title()}Rank"
+    )
+    for class_name, rank_name_set in [
+        ("Assault", RANK_NAMES),
+        ("Grenadier", RANK_NAMES),
+        ("Gunner", RANK_NAMES),
+        ("Ranger", RANK_NAMES),
+        ("Sharpshooter", RANK_NAMES),
+        ("Shinobi", RANK_NAMES),
+        ("Specialist", RANK_NAMES),
+        ("Technical", RANK_NAMES),
+    ]
+    for rank in range(2, 9)
+}
+
+lwotc_modified_soldier_ranks: dict[str, X2WOTCLocationData] = {
+    f"_{class_name.title()}_LWRank{rank}": X2WOTCLocationData(
+        display_name = SOLDIER_RANK_LOCATION_PREFIX + f"LW {class_name}" + SOLDIER_RANK_LOCATION_INFIX + rank_name_set[rank],
+        id = get_new_location_id(),
+        type = "SoldierRank",
+        tags = {f"{class_name.lower()}", f"item:_{class_name.title()}_LWRank:{rank - 1}"} | tags,
+        difficulty = 40.0 if class_name == "SPARK" else 0.0,
+        dlc = "SLG" if class_name == "SPARK" else "WOTC",
+        normal_item = f"_{class_name.title()}_LWRank"
+    )
+    for class_name, rank_name_set, tags in [
+        ("Skirmisher", RANK_NAMES, set[str]()),
+        ("Reaper", RANK_NAMES, set[str]()),
+        ("Templar", PSI_RANK_NAMES, set[str]()),
+        ("SPARK", SPARK_RANK_NAMES, {"proving_ground"}),
+    ]
+    for rank in range(2, 9)
+}
+
 locations: dict[str, X2WOTCLocationData] = {
     **lwotc_techs,
     **lwotc_item_uses,
-    **lwotc_enemy_kills
+    **lwotc_enemy_kills,
+    **lwotc_native_soldier_ranks,
+    **lwotc_modified_soldier_ranks,
 }

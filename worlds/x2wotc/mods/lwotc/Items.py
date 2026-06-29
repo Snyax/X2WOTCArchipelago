@@ -1,6 +1,13 @@
 from BaseClasses import ItemClassification as IC
 
-from worlds.x2wotc.ItemData import X2WOTCItemData, TECH_ITEM_PREFIX, PCS_ITEM_PREFIX, WEAPON_MOD_ITEM_PREFIX, get_new_item_id
+from worlds.x2wotc.ItemData import (
+    get_new_item_id,
+    X2WOTCItemData,
+    TECH_ITEM_PREFIX,
+    PCS_ITEM_PREFIX,
+    WEAPON_MOD_ITEM_PREFIX,
+    PROMOTION_ITEM_PREFIX,
+)
 
 
 # For the full definition of X2WOTCItemData, see worlds/x2wotc/ItemData.py
@@ -372,8 +379,48 @@ lwotc_weapon_mod_items: dict[str, X2WOTCItemData] = {
     ),
 }
 
+lwotc_native_promotion_items: dict[str, X2WOTCItemData] = {
+    f"LWS_{class_name.title()}Rank": X2WOTCItemData(
+        display_name = PROMOTION_ITEM_PREFIX + "LW " + class_name,
+        id = get_new_item_id(),
+        classification = IC.progression,
+        type = "Promotion",
+        tags = {f"{class_name.lower()}"},
+        power = 15.0,
+    )
+    for class_name in [
+        "Assault",
+        "Grenadier",
+        "Gunner",
+        "Ranger",
+        "Sharpshooter",
+        "Shinobi",
+        "Specialist",
+        "Technical",
+    ]
+}
+
+lwotc_modified_promotion_items = {
+    f"_{class_name.title()}_LWRank": X2WOTCItemData(
+        display_name = PROMOTION_ITEM_PREFIX + "LW " + class_name,
+        id = get_new_item_id(),
+        classification = IC.progression,
+        type = "Promotion",
+        tags = {f"{class_name.lower()}"},
+        power = 15.0,
+    )
+    for class_name in [
+        "Skirmisher",
+        "Reaper",
+        "Templar",
+        "SPARK",
+    ]
+}
+
 items: dict[str, X2WOTCItemData] = {
     **lwotc_items,
     **lwotc_pcs_items,
     **lwotc_weapon_mod_items,
+    **lwotc_native_promotion_items,
+    **lwotc_modified_promotion_items,
 }
