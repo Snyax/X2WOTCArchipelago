@@ -13,5 +13,5 @@ rule_priority = 0.0
 
 RANKS_STR = ", ".join(f"Ranks[{i-2}]={i}" for i in range(2, MAX_RANK+1))
 config: dict[str, str] = {
-    "WOTCArchipelago_Ranksanity": f"+RanksanityData=(ID=\"BountyHunter\", ClassName=\"BountyHunter\", \\\\\n{RANKS_STR})\n"
+    "WOTCArchipelago_Ranksanity": f'+RanksanityData=(ID="BountyHunter", ClassName="BountyHunter", {RANKS_STR})'
 }

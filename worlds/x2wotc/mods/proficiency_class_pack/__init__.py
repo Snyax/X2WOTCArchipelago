@@ -33,6 +33,6 @@ config: dict[str, str] = {
         +DisabledDataEntries=DefaultSharpshooter
         """
     ) + "".join(
-        f"+RanksanityData=(ID=\"{internal_name.title()}\", ClassName=\"{internal_name.title()}\", \\\\\n{RANKS_STR})\n" for internal_name in soldier_classes.keys()
+        f'+RanksanityData=(ID="{internal_name.title()}", ClassName="{internal_name.title()}", {RANKS_STR})' for internal_name in soldier_classes.keys()
     )
 }
