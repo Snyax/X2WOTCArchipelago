@@ -3,14 +3,14 @@ from worlds.x2wotc.LocationData import (
     get_new_location_id,
     SOLDIER_RANK_LOCATION_PREFIX,
     SOLDIER_RANK_LOCATION_INFIX,
-    DEFAULT_RANK_NAME_SET,
+    DEFAULT_RANK_NAMES,
 )
 
 MAX_RANK = 7
 
 locations: dict[str, X2WOTCLocationData] = {
     f"StormriderRank{rank}": X2WOTCLocationData(
-        display_name = SOLDIER_RANK_LOCATION_PREFIX + "Stormrider" + SOLDIER_RANK_LOCATION_INFIX + DEFAULT_RANK_NAME_SET[rank],
+        display_name = SOLDIER_RANK_LOCATION_PREFIX + "Stormrider" + SOLDIER_RANK_LOCATION_INFIX + DEFAULT_RANK_NAMES[rank],
         id = get_new_location_id(),
         type = "SoldierRank",
         tags = {"stormrider", f"item:StormriderRank:{rank - 1}"},
