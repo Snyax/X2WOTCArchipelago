@@ -48,7 +48,7 @@ locations: dict[str, X2WOTCLocationData] = {
         id = get_new_location_id(),
         layer = "Tactical",
         type = "ItemUse",
-        tags = {"grenade", "proving_ground", "req:Autopsy_AshMutonDestroyerCompleted"},
+        tags = {"grenade", "proving_ground", "item:Autopsy_AshMutonDestroyerCompleted"},
         difficulty = 20.0,
     ),
 }
