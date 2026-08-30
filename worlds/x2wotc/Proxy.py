@@ -1,6 +1,8 @@
 from aiohttp import web
 import asyncio
+import time
 from typing import TYPE_CHECKING
+import urllib.parse
 
 from CommonClient import NetworkItem, NetworkSlot, logger
 from NetUtils import ClientStatus
@@ -310,6 +312,28 @@ async def handle_tick_tactical(request: web.Request):
     response_body = handle_tick("Tactical", number_received)
     return web.Response(text=response_body)
 
+# --------------------------------------------------- DEATHLINK ------------------------------------------------------ #
+
+async def handle_death(request: web.Request):
+    if time.time() - ctx.last_death_link > 2.0:
+        await ctx.send_death(urllib.parse.unquote(request.match_info["tail"]))
+    return web.Response()
+
+async def handle_death_tick(request: web.Request):
+    try:
+        async with asyncio.timeout(2.0):
+            await ctx.update_death_link(request.match_info["tail"] == "True")
+            await ctx.deathlink_received.wait()
+    except TimeoutError:
+        pass
+
+    if ctx.deathlink_received.is_set():
+        ctx.deathlink_received.clear()
+        if time.time() - ctx.last_death_link < 2.0:
+            return web.Response(text=ctx.deathlink_text)
+
+    return web.Response()
+
 #======================================================================================================================#
 #                                                     RUN PROXY                                                        #
 #----------------------------------------------------------------------------------------------------------------------#
@@ -323,6 +347,8 @@ async def run_proxy(local_ctx: "X2WOTCContext"):
     app.router.add_get("/Tick/Tactical/{tail:[0-9]+}", handle_tick_tactical)
     app.router.add_get("/Check/{tail:.*}", handle_check)
     app.router.add_get("/Hint/{tail:.*}", handle_hint)
+    app.router.add_get("/Death/{tail:.*}", handle_death)
+    app.router.add_get("/DeathTick/{tail:True|False}", handle_death_tick)
 
     runner = web.AppRunner(app)
     await runner.setup()

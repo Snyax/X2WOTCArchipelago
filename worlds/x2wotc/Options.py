@@ -141,7 +141,7 @@ class GlobalPromotions(Toggle):
     """Enable global promotions for all soldier classes, including those not covered by Ranksanity.
     This adds no locations to the multiworld but rewards default promotion items for rank-up events of all classes,
     meaning when one soldier reaches a certain rank, all soldiers of the same class will now have that rank going forward.
-    Recommended if you want insurance against Deathlink without enabling full Ranksanity (as it "saves your progress")."""
+    Recommended if you want insurance against DeathLink without enabling full Ranksanity (as it "saves your progress")."""
     display_name = "Global Promotions"
     default = False
 
@@ -380,6 +380,23 @@ class ExtraCorpseGain(Range):
     default = 1
 
 
+class DeathLink(Toggle):
+    """When one of XCOM's soldiers dies, everyone else who enabled DeathLink dies, and vice versa.
+    Can be changed in-game via Mod Config Menu."""
+    display_name = "DeathLink"
+    default = False
+
+
+class DeathLinkChance(Range):
+    """Set the probability of a received DeathLink packet killing one of XCOM's soldiers.
+    Yes, it's random. That's XCOM, baby!
+    Can be changed in-game via Mod Config Menu."""
+    display_name = "DeathLink Chance"
+    range_start = 0
+    range_end = 100
+    default = 10
+
+
 class InstantRookieTraining(Toggle):
     """Make training rookies in the GTS instant.
     Can be changed in-game via Mod Config Menu."""
@@ -409,14 +426,14 @@ class ReplaceFactionHeroes(Toggle):
 
 
 class DisableDayOneTraps(Toggle):
-    """Disable traps received during the first day of a campaign.
+    """Disable traps received on (or before) the first day of a campaign.
     Can be changed in-game via Mod Config Menu."""
     display_name = "Disable Day One Traps"
     default = True
 
 
 class DisableTurnOneTraps(Toggle):
-    """Disable traps received during (or before) the first turn of a mission.
+    """Disable traps received on (or before) the first turn of a mission.
     Can be changed in-game via Mod Config Menu."""
     display_name = "Disable Turn One Traps"
     default = True
@@ -425,6 +442,7 @@ class DisableTurnOneTraps(Toggle):
 class ActiveMods(OptionSet):
     """Activate these mods from the x2wotc/mods directory.
     This is only relevant when modding *the APWorld* (NOT the game), leave empty if you're unsure what that means.
+    Read about APWorld mods at https://github.com/Snyax/X2WOTCArchipelago/blob/main/worlds/x2wotc/docs/apworld_mods.md
     List all available mods with the /mods client command."""
     display_name = "Active Mods"
     valid_keys = frozenset(mod_names)
@@ -480,6 +498,8 @@ class X2WOTCOptions(PerGameCommonOptions):
     supply_raid_reward_error: SupplyRaidRewardError
     extra_xp_gain: ExtraXPGain
     extra_corpse_gain: ExtraCorpseGain
+    deathlink: DeathLink
+    deathlink_chance: DeathLinkChance
     instant_rookie_training: InstantRookieTraining
     instant_spark_construction: InstantSPARKConstruction
     refund_spark_costs: RefundSPARKCosts
@@ -559,6 +579,8 @@ x2wotc_option_groups: list[OptionGroup] = [
             SupplyRaidRewardError,
             ExtraXPGain,
             ExtraCorpseGain,
+            DeathLink,
+            DeathLinkChance,
             InstantRookieTraining,
             InstantSPARKConstruction,
             RefundSPARKCosts,

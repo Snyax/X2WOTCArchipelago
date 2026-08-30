@@ -258,6 +258,9 @@ class X2WOTCContext(CommonContext):
     connected: DualEvent
     scouted: DualEvent
 
+    deathlink_received: DualEvent
+    deathlink_text: str | None
+
     proxy_port: int
     proxy_task: asyncio.Task | None
     proxy_started: DualEvent
@@ -281,6 +284,9 @@ class X2WOTCContext(CommonContext):
 
         self.connected = self.DualEvent()
         self.scouted = self.DualEvent()
+
+        self.deathlink_received = self.DualEvent()
+        self.deathlink_text = None
 
         self.proxy_port = 0
         self.proxy_task = None
@@ -474,6 +480,13 @@ class X2WOTCContext(CommonContext):
 
         return True
 
+    def on_deathlink(self, data: dict[str, Any]):
+        super().on_deathlink(data)
+        self.deathlink_text = data.get("cause", None)
+        if not self.deathlink_text:
+            self.deathlink_text = f"Received from {data["source"]}"
+        self.deathlink_received.set()
+
     def make_gui(self):
         ui = super().make_gui()
         ui.base_title = CLIENT_NAME
@@ -576,6 +589,8 @@ class X2WOTCContext(CommonContext):
                 "DEF_SKIP_RAID_REWARD_MULT_ERR": str(float(self.slot_data.get("supply_raid_reward_error", 0)) / 100.0),
                 "DEF_EXTRA_XP_MULT": str(float(self.slot_data.get("extra_xp_gain", 0)) / 100.0),
                 "DEF_EXTRA_CORPSES": str(self.slot_data.get("extra_corpse_gain", 0)),
+                "DEF_DEATHLINK": str(self.slot_data.get("deathlink", False)),
+                "DEF_DEATHLINK_CHANCE": str(float(self.slot_data.get("deathlink_chance", 0)) / 100.0),
                 "DEF_INSTANT_ROOKIE_TRAINING": str(self.slot_data.get("instant_rookie_training", False)),
                 "DEF_INSTANT_SPARK_BUILDING": str(self.slot_data.get("instant_spark_construction", False)),
                 "DEF_REFUND_SPARK_COST": str(self.slot_data.get("refund_spark_costs", False)),
