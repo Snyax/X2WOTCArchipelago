@@ -191,8 +191,8 @@ class X2WOTCCommandProcessor(ClientCommandProcessor):
         return True
 
     @mark_raw
-    def _cmd_stages(self, progressive_item: str = "") -> bool:
-        """Print progressive item stages"""
+    def _cmd_progressive(self, progressive_item: str = "") -> bool:
+        """Print progressive item info"""
         progressive_items = [
             item_data.display_name
             for item_data in item_table.values()
@@ -200,15 +200,24 @@ class X2WOTCCommandProcessor(ClientCommandProcessor):
         ]
 
         if progressive_item == "":
-            self.output("All progressive items:")
-            for item_name in progressive_items:
-                self.output(f"- {item_name}")
+            active_progressive_items = self.ctx.slot_data.get("active_progressive_items", None)
+            if active_progressive_items is not None:
+                if active_progressive_items:
+                    self.output("Active progressive items:")
+                    for item_key in active_progressive_items:
+                        self.output(f"- {item_table[item_key].display_name}")
+                else:
+                    self.output("No active progressive items.")
+            else:
+                self.output("All progressive items:")
+                for item_name in progressive_items:
+                    self.output(f"- {item_name}")
             return True
 
         result, usable, response = get_intended_text(progressive_item, progressive_items)
         if not usable:
-            self.output(response)
             self.ctx.ui.last_autofillable_command = "/stages"
+            self.output(response)
             return False
 
         item_key = item_display_name_to_key[result]
