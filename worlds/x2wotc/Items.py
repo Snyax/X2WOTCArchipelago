@@ -1,3 +1,4 @@
+from collections import defaultdict
 from copy import deepcopy
 from logging import warning
 from random import Random
@@ -55,59 +56,25 @@ item_id_to_key = {
 }
 
 # Item groups
-item_groups: dict[str, set[str]] = {}
-
-# Item type groups
-item_types: set[str] = set()
+item_groups: dict[str, set[str]] = defaultdict(set)
 for item_data in item_table.values():
-    if item_data.id and "example" not in item_data.type.lower():
-        item_types.add(item_data.type)
-for item_type in item_types:
-    item_groups[item_type] = {
-        item_data.display_name
-        for item_data in item_table.values()
-        if item_data.id and item_data.type == item_type
-    }
-
-# Item tag groups
-item_tags: set[str] = set()
-for item_data in item_table.values():
-    if item_data.id:
-        item_tags.update({
-            tag
-            for tag in item_data.tags
-            if "example" not in tag.lower()
-        })
-for item_tag in item_tags:
-    item_groups[
-        "".join(word.capitalize() for word in item_tag.split("_"))  # Convert snake_case tag to PascalCase
-    ] = {
-        item_data.display_name
-        for item_data in item_table.values()
-        if item_data.id and item_tag in item_data.tags
-    }
-
-# Progressive item groups
-"""
-for item_data in item_table.values():
-    if item_data.stages is not None:
-        item_groups[item_data.display_name] = {item_data.display_name}
-        for stage in item_data.stages:
-            stage_name = item_table[stage].display_name
-            item_groups[item_data.display_name].add(stage_name)
-
-            if stage_name not in item_groups:
-                item_groups[stage_name] = {stage_name}
-            item_groups[stage_name].add(item_data.display_name)
-"""
+    if item_data.id and item_data.type != "ExampleType":
+        # Type
+        item_groups[item_data.type].add(item_data.display_name)
+        # DLC
+        if item_data.dlc:
+            item_groups[item_data.dlc].add(item_data.display_name)
+        # Tags
+        for tag in item_data.tags:
+            # Convert snake_case tag to PascalCase
+            tag = "".join(word.capitalize() for word in tag.split("_"))
+            item_groups[tag].add(item_data.display_name)
 
 
 class ItemManager:
     item_display_name_to_id = item_display_name_to_id
     item_display_name_to_key = item_display_name_to_key
     item_id_to_key = item_id_to_key
-
-    item_types = item_types
     item_groups = item_groups
 
     def __init__(self):
