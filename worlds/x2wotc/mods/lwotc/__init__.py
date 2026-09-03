@@ -62,31 +62,26 @@ def generate_early(world: "X2WOTCWorld"):
         warning(f"X2WOTC: Ignoring enemy rando for player {world.player_name} because the mod 'Long War of the Chosen' is enabled")
 
     # Weapons have 5 tiers
-    world.item_manager.disable_progressive_item("ProgressiveRifleTechCompleted")
-    world.item_manager.disable_progressive_item("ProgressiveRifleTechCompleted+")
-    if "RifleTech+" in world.options.progressive_items:
-        if not world.item_manager.enable_progressive_item("ProgressiveRifleTechLwotcCompleted+"):
-            warning(f"X2WOTC: Failed to enable progressive LWOTC rifle tech+ for player {world.player_name}")
-        if not world.item_manager.enable_progressive_item("ProgressiveAdvancedWeaponTechLwotcCompleted"):
-            warning(f"X2WOTC: Failed to enable progressive LWOTC advanced weapon tech for player {world.player_name}")
-    elif "RifleTech" in world.options.progressive_items:
-        if not world.item_manager.enable_progressive_item("ProgressiveRifleTechLwotcCompleted"):
-            warning(f"X2WOTC: Failed to enable progressive LWOTC rifle tech for player {world.player_name}")
-        if not world.item_manager.enable_progressive_item("ProgressiveAdvancedWeaponTechLwotcCompleted"):
-            warning(f"X2WOTC: Failed to enable progressive LWOTC advanced weapon tech for player {world.player_name}")
+    if "GunTech+" in world.options.progressive_items:
+        world.item_manager.disable_progressive_item("ProgressiveRifleShotgunTechCompleted+")
+        world.item_manager.disable_progressive_item("ProgressiveCannonSniperTechCompleted")
+        world.item_manager.enable_progressive_item("ProgressiveRifleTechLwotcCompleted+")
+        world.item_manager.enable_progressive_item("ProgressiveAdvancedWeaponTechLwotcCompleted", random=world.random)
+    elif "GunTech" in world.options.progressive_items:
+        world.item_manager.disable_progressive_item("ProgressiveRifleShotgunTechCompleted")
+        world.item_manager.disable_progressive_item("ProgressiveCannonSniperTechCompleted")
+        world.item_manager.enable_progressive_item("ProgressiveRifleTechLwotcCompleted")
+        world.item_manager.enable_progressive_item("ProgressiveAdvancedWeaponTechLwotcCompleted", random=world.random)
 
     # GREMLINs are upgraded from ADVENT Robotics
-    world.item_manager.disable_progressive_item("ProgressiveGREMLINTechCompleted")
     if "GREMLINTech" in world.options.progressive_items:
-        if not world.item_manager.enable_progressive_item("ProgressiveGREMLINTechLwotcCompleted"):
-            warning(f"X2WOTC: Failed to enable progressive LWOTC GREMLIN tech for player {world.player_name}")
+        world.item_manager.disable_progressive_item("ProgressiveGREMLINTechCompleted")
+        world.item_manager.enable_progressive_item("ProgressiveGREMLINTechLwotcCompleted")
 
     # Light and Heavy Armor are researches, not PG projects
     if "ArmorTech" in world.options.progressive_items:
-        if not world.item_manager.enable_progressive_item("ProgressiveLightArmorTechLwotcCompleted"):
-            warning(f"X2WOTC: Failed to enable progressive LWOTC light armor tech for player {world.player_name}")
-        if not world.item_manager.enable_progressive_item("ProgressiveHeavyArmorTechLwotcCompleted"):
-            warning(f"X2WOTC: Failed to enable progressive LWOTC heavy armor tech for player {world.player_name}")
+        world.item_manager.enable_progressive_item("ProgressiveLightArmorTechLwotcCompleted")
+        world.item_manager.enable_progressive_item("ProgressiveHeavyArmorTechLwotcCompleted")
 
     # Handle option to force early proving ground
     if world.options.early_proving_ground:

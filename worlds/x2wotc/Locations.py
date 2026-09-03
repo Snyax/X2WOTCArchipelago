@@ -1,12 +1,9 @@
 from collections import defaultdict
 from copy import deepcopy
 from logging import warning
-from typing import TYPE_CHECKING
+from typing import Any
 
 from BaseClasses import Location
-
-if TYPE_CHECKING:
-    from worlds.x2wotc import X2WOTCWorld
 
 from .EnemyRando import EnemyRandoManager
 from .LocationData import X2WOTCLocationData, location_table
@@ -64,11 +61,12 @@ class LocationManager:
     loc_id_to_key = loc_id_to_key
     loc_groups = loc_groups
 
-    def __init__(self, world: "X2WOTCWorld"):
-        self.enemy_rando_manager: EnemyRandoManager = world.enemy_rando_manager
+    def __init__(self, enemy_rando_manager: EnemyRandoManager):
+        self.enemy_rando_manager: EnemyRandoManager = enemy_rando_manager
         self.autopsy_difficulty: float = 3.0
 
         self.location_table: dict[str, X2WOTCLocationData] = deepcopy(location_table)
+        self.replaced: dict[str, dict[str, Any]] = defaultdict(dict)
         self.locked: bool = False
 
         self.enabled: dict[str, bool] = {loc_name: True for loc_name in self.location_table.keys()}
@@ -80,6 +78,7 @@ class LocationManager:
 
         loc_data = self.location_table[loc_name]
         self.location_table[loc_name] = loc_data.replace(**kwargs)
+        self.replaced[loc_name].update(kwargs)
 
     def get_location_difficulty(self, loc_name: str) -> float:
         loc_data = self.location_table[loc_name]

@@ -20,7 +20,8 @@ if TYPE_CHECKING:
     from CommonClient import CommonContext, ClientCommandProcessor
 
 from .EnemyRando import EnemyRandoManager
-from .Items import item_table, item_display_name_to_key
+from .Items import ItemManager
+from .Locations import LocationManager
 from .Options import HintResearchProjects, RankSanity
 from .Proxy import run_proxy
 from .Settings import X2WOTCSettings
@@ -195,7 +196,7 @@ class X2WOTCCommandProcessor(ClientCommandProcessor):
         """Print progressive item info"""
         progressive_items = [
             item_data.display_name
-            for item_data in item_table.values()
+            for item_data in self.ctx.item_manager.item_table.values()
             if item_data.stages is not None
         ]
 
@@ -205,7 +206,7 @@ class X2WOTCCommandProcessor(ClientCommandProcessor):
                 if active_progressive_items:
                     self.output("Active progressive items:")
                     for item_key in active_progressive_items:
-                        self.output(f"- {item_table[item_key].display_name}")
+                        self.output(f"- {self.ctx.item_manager.item_table[item_key].display_name}")
                 else:
                     self.output("No active progressive items.")
             else:
@@ -220,15 +221,17 @@ class X2WOTCCommandProcessor(ClientCommandProcessor):
             self.output(response)
             return False
 
-        item_key = item_display_name_to_key[result]
-        stages = item_table[item_key].stages
+        item_key = self.ctx.item_manager.item_display_name_to_key[result]
+        stages = self.ctx.item_manager.item_table[item_key].stages
         if not stages:
             self.output(f"No stages for progressive item '{result}'.")
             return True
 
         self.output(f"Stages for progressive item '{result}':")
         for stage in stages:
-            stage_name = item_table[stage].display_name if stage in item_table else "Nothing"
+            stage_name = "Nothing"
+            if stage in self.ctx.item_manager.item_table:
+                stage_name = self.ctx.item_manager.item_table[stage].display_name
             self.output(f"- {stage_name}")
         return True
 
@@ -278,6 +281,8 @@ class X2WOTCContext(CommonContext):
     active_mods: list[str]
 
     enemy_rando_manager: EnemyRandoManager
+    item_manager: ItemManager
+    loc_manager: LocationManager
 
     config_file: str | None
     spoiler_file: str | None
@@ -305,6 +310,8 @@ class X2WOTCContext(CommonContext):
         self.active_mods = []
 
         self.enemy_rando_manager = EnemyRandoManager()
+        self.item_manager = ItemManager()
+        self.loc_manager = LocationManager(self.enemy_rando_manager)
 
         self.config_file = None
         self.spoiler_file = None
@@ -334,15 +341,18 @@ class X2WOTCContext(CommonContext):
 
         if cmd == "Connected":
             self.slot_data = args["slot_data"]
-            if not self.validate_world_version():
+            if not self.validate_world_version() or not self.validate_mod_config_and_version():
                 async_start(self.disconnect())
                 return
 
             self.active_mods = sorted(self.slot_data.get("active_mods", []))
             self.enemy_rando_manager.set_enemy_shuffle(self.slot_data["enemy_shuffle"])
-            if not self.validate_mod_config_and_version():
-                async_start(self.disconnect())
-                return
+            replaced_item_data: dict[str, Any] = self.slot_data.get("replaced_item_data", {})
+            for item_name, kwargs in replaced_item_data.items():
+                self.item_manager.replace(item_name, **kwargs)
+            replaced_loc_data: dict[str, Any] = self.slot_data.get("replaced_loc_data", {})
+            for loc_name, kwargs in replaced_loc_data.items():
+                self.loc_manager.replace(loc_name, **kwargs)
 
             self.connected.set()
             self.patch_config()
@@ -364,11 +374,11 @@ class X2WOTCContext(CommonContext):
                     return
 
                 item_name = text.split('"', 1)[1]
-                item_key = item_display_name_to_key[item_name]
+                item_key = self.item_manager.item_display_name_to_key[item_name]
                 active_progressive_items = self.slot_data.get("active_progressive_items", [])
                 progressive_item_names = [
                     item_data.display_name
-                    for item_name, item_data in item_table.items()
+                    for item_name, item_data in self.item_manager.item_table.items()
                     if item_data.stages is not None and item_key in item_data.stages
                         and item_name in active_progressive_items
                 ]

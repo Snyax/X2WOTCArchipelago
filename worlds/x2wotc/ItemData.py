@@ -1,3 +1,4 @@
+from collections import Counter
 from typing import NamedTuple
 
 from BaseClasses import ItemClassification as IC
@@ -29,13 +30,20 @@ class X2WOTCItemData(NamedTuple):
                             # "WOTC": War of the Chosen
     normal_location: str | None = None
     stages: list[str | None] | None = None  # For progressive items
+    shuffle_stages: set[int] | None = None  # Shuffle stages at these indices
 
-    mutable_fields = {"classification", "tags", "power"}
+    mutable_fields = {"classification", "tags", "power", "stages"}
 
     def replace(self, **kwargs) -> "X2WOTCItemData":
         immutable_fields = set(self._fields) & set(kwargs.keys()) - self.mutable_fields
         if immutable_fields:
             raise ValueError(f"Cannot replace immutable fields {immutable_fields}.")
+
+        # Validate stages
+        if "stages" in kwargs:
+            if not self.stages or Counter(kwargs["stages"]) != Counter(self.stages):
+                raise ValueError(f"Invalid replacement item stages: {self.stages} -> {kwargs["stages"]}.")
+
         return self._replace(**kwargs)
 
 
@@ -542,8 +550,8 @@ wotc_chosen_weapon_tech_items: dict[str, X2WOTCItemData] = {
 #-----------------------------------------------------------------------------------------------------------------------
 
 progressive_tech_items: dict[str, X2WOTCItemData] = {
-    "ProgressiveRifleTechCompleted": X2WOTCItemData(
-        display_name = TECH_ITEM_PREFIX + "Progressive Rifle",
+    "ProgressiveRifleShotgunTechCompleted": X2WOTCItemData(
+        display_name = TECH_ITEM_PREFIX + "Progressive Rifle/Shotgun",
         id = get_new_item_id(),
         classification = IC.progression | IC.useful,
         type = "TechCompleted",
@@ -551,10 +559,12 @@ progressive_tech_items: dict[str, X2WOTCItemData] = {
         stages = [
             "MagnetizedWeaponsCompleted",
             "PlasmaRifleCompleted",
-        ]
+            "AlloyCannonCompleted",
+        ],
+        shuffle_stages = {1, 2}
     ),
-    "ProgressiveRifleTechCompleted+": X2WOTCItemData(
-        display_name = TECH_ITEM_PREFIX + "Progressive Rifle+",
+    "ProgressiveRifleShotgunTechCompleted+": X2WOTCItemData(
+        display_name = TECH_ITEM_PREFIX + "Progressive Rifle/Shotgun+",
         id = get_new_item_id(),
         classification = IC.progression | IC.useful,
         type = "TechCompleted",
@@ -563,7 +573,22 @@ progressive_tech_items: dict[str, X2WOTCItemData] = {
             "ModularWeaponsCompleted",
             "MagnetizedWeaponsCompleted",
             "PlasmaRifleCompleted",
-        ]
+            "AlloyCannonCompleted",
+        ],
+        shuffle_stages = {2, 3}
+    ),
+    "ProgressiveCannonSniperTechCompleted": X2WOTCItemData(
+        display_name = TECH_ITEM_PREFIX + "Progressive Cannon/Sniper",
+        id = get_new_item_id(),
+        classification = IC.progression | IC.useful,
+        type = "TechCompleted",
+        tags = {"weapon", "progressive"},
+        stages = [
+            "GaussWeaponsCompleted",
+            "HeavyPlasmaCompleted",
+            "PlasmaSniperCompleted",
+        ],
+        shuffle_stages = {1, 2}
     ),
     "ProgressiveArmorTechCompleted": X2WOTCItemData(
         display_name = TECH_ITEM_PREFIX + "Progressive Armor",
@@ -588,8 +613,8 @@ progressive_tech_items: dict[str, X2WOTCItemData] = {
             "PoweredArmorCompleted",
         ]
     ),
-    "ProgressiveMeleeTechCompleted": X2WOTCItemData(
-        display_name = TECH_ITEM_PREFIX + "Progressive Melee Weapon",
+    "ProgressiveSwordTechCompleted": X2WOTCItemData(
+        display_name = TECH_ITEM_PREFIX + "Progressive Sword",
         id = get_new_item_id(),
         classification = IC.progression | IC.useful,
         type = "TechCompleted",

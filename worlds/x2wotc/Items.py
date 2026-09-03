@@ -2,6 +2,7 @@ from collections import defaultdict
 from copy import deepcopy
 from logging import warning
 from random import Random
+from typing import Any
 
 from BaseClasses import Item
 from BaseClasses import ItemClassification as IC
@@ -79,6 +80,7 @@ class ItemManager:
 
     def __init__(self):
         self.item_table: dict[str, X2WOTCItemData] = deepcopy(item_table)
+        self.replaced: dict[str, dict[str, Any]] = defaultdict(dict)
         self.locked: bool = False
 
         self.resource_items: set[str] = set(resource_item_table.keys())
@@ -109,6 +111,21 @@ class ItemManager:
 
         item_data = self.item_table[item_name]
         self.item_table[item_name] = item_data.replace(**kwargs)
+        self.replaced[item_name].update(kwargs)
+
+    def shuffle_stages(self, item_name: str, random: Random):
+        item_data = self.item_table[item_name]
+        if not item_data.stages or not item_data.shuffle_stages:
+            raise ValueError(f"Cannot shuffle stages for item {item_name}.")
+
+        shuffled_indices = list(item_data.shuffle_stages)
+        random.shuffle(shuffled_indices)
+        shuffled_stages = [
+            stage if index not in item_data.shuffle_stages
+            else item_data.stages[shuffled_indices.pop()]
+            for index, stage in enumerate(item_data.stages)
+        ]
+        self.replace(item_name, stages=shuffled_stages)
 
     def get_item_power(self, item_name: str, count: int) -> float:
         item_data = self.item_table[item_name]
@@ -157,43 +174,46 @@ class ItemManager:
     def disable_item(self, item_name: str):
         self.set_item_count(item_name, 0)
 
-    def enable_progressive_item(self, item_name: str) -> bool:
+    def enable_progressive_item(self, item_name: str, random: Random | None = None):
         item_data = self.item_table[item_name]
         stages = item_data.stages
         if stages is None:
-            return False
+            raise ValueError(f"Cannot enable non-progressive item {item_name}.")
 
         if self.item_count[item_name] != 0:
-            return False
+            raise ValueError(f"Cannot enable progressive item {item_name}, ",
+                             f"incorrect count ({self.item_count[item_name]} != 0).")
         for stage_name in stages:
             if stage_name is not None and self.item_count[stage_name] != 1:
-                return False
+                raise ValueError(f"Cannot enable progressive item {item_name}, ",
+                                 f"incorrect count for stage {stage_name} ({self.item_count[stage_name]} != 1).")
 
+        self.set_item_count(item_name, len(stages))
         for stage_name in stages:
             if stage_name is not None:
                 self.set_item_count(stage_name, 0)
 
-        self.set_item_count(item_name, len(stages))
-        return True
+        if item_data.shuffle_stages and random is not None:
+            self.shuffle_stages(item_name, random)
 
     def disable_progressive_item(self, item_name: str) -> bool:
         item_data = self.item_table[item_name]
         stages = item_data.stages
         if stages is None:
-            return False
+            raise ValueError(f"Cannot disable non-progressive item {item_name}.")
 
         if self.item_count[item_name] != len(stages):
-            return False
+            raise ValueError(f"Cannot disable progressive item {item_name}, ",
+                             f"incorrect count ({self.item_count[item_name]} != {len(stages)}).")
         for stage_name in stages:
             if stage_name is not None and self.item_count[stage_name] != 0:
-                return False
+                raise ValueError(f"Cannot disable progressive item {item_name}, ",
+                                 f"incorrect count for stage {stage_name} ({self.item_count[stage_name]} != 0).")
 
+        self.set_item_count(item_name, 0)
         for stage_name in stages:
             if stage_name is not None:
                 self.set_item_count(stage_name, 1)
-
-        self.set_item_count(item_name, 0)
-        return True
 
     def enable_chosen_hunt_items(self, progressive: bool):
         if progressive:

@@ -87,7 +87,11 @@ lwotc_items: dict[str, X2WOTCItemData] = {
             "AdvancedLasersCompleted",
             "_GaussWeaponsCompleted_LW",
             "AdvancedCoilgunsCompleted",
-        ]
+            "HeavyPlasmaCompleted",
+            "PlasmaSniperCompleted",
+            "AlloyCannonCompleted",
+        ],
+        shuffle_stages = {3, 4, 5}
     ),
     "ProgressiveHeavyArmorTechLwotcCompleted": X2WOTCItemData(
         display_name = TECH_ITEM_PREFIX + "Progressive Heavy Armor (LWOTC)",
