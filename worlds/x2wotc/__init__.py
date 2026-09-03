@@ -39,7 +39,7 @@ class X2WOTCWeb(WebWorld):
     option_groups = x2wotc_option_groups
     tutorials = [Tutorial(
         "Multiworld Setup Guide",
-        "A guide to setting up the XCOM 2: War of the Chosen Archipelago mod.",
+        "A guide to setting up the XCOM 2 War of the Chosen Archipelago mod.",
         "English",
         "setup_en.md",
         "setup/en",
@@ -416,7 +416,7 @@ class X2WOTCWorld(World):
 
         # Enemy rando
         if self.options.enemy_rando:
-            spoiler_handle.write(f"\n\n=== Enemy Rando for player {self.player_name} ===\n")
+            spoiler_handle.write(f"\n\n=== Enemy rando for player {self.player_name} ===\n")
             for placement_index, placed_index in enumerate(self.enemy_rando_manager.enemy_shuffle):
                 spoiler_handle.write(
                     f"{self.enemy_rando_manager.enemy_names[placement_index]} <- "
