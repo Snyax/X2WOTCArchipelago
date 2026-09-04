@@ -15,6 +15,34 @@ from .Rules import set_rules
 name = "Long War of the Chosen"
 location_map = {
     "GaussWeapons": "_GaussWeapons_LW",
+    "SkirmisherRank2": "_Skirmisher_LWRank2",
+    "SkirmisherRank3": "_Skirmisher_LWRank3",
+    "SkirmisherRank4": "_Skirmisher_LWRank4",
+    "SkirmisherRank5": "_Skirmisher_LWRank5",
+    "SkirmisherRank6": "_Skirmisher_LWRank6",
+    "SkirmisherRank7": "_Skirmisher_LWRank7",
+    "SkirmisherRank8": "_Skirmisher_LWRank8",
+    "ReaperRank2": "_Reaper_LWRank2",
+    "ReaperRank3": "_Reaper_LWRank3",
+    "ReaperRank4": "_Reaper_LWRank4",
+    "ReaperRank5": "_Reaper_LWRank5",
+    "ReaperRank6": "_Reaper_LWRank6",
+    "ReaperRank7": "_Reaper_LWRank7",
+    "ReaperRank8": "_Reaper_LWRank8",
+    "TemplarRank2": "_Templar_LWRank2",
+    "TemplarRank3": "_Templar_LWRank3",
+    "TemplarRank4": "_Templar_LWRank4",
+    "TemplarRank5": "_Templar_LWRank5",
+    "TemplarRank6": "_Templar_LWRank6",
+    "TemplarRank7": "_Templar_LWRank7",
+    "TemplarRank8": "_Templar_LWRank8",
+    "SparkRank2": "_Spark_LWRank2",
+    "SparkRank3": "_Spark_LWRank3",
+    "SparkRank4": "_Spark_LWRank4",
+    "SparkRank5": "_Spark_LWRank5",
+    "SparkRank6": "_Spark_LWRank6",
+    "SparkRank7": "_Spark_LWRank7",
+    "SparkRank8": "_Spark_LWRank8",
 }
 item_map = {
     "_GaussWeaponsCompleted_LW": "GaussWeaponsCompleted",
@@ -27,6 +55,10 @@ item_map = {
     "_FreeKillUpgrade_Bsc_LW:1": "FreeKillUpgrade_Bsc:1",
     "_FreeKillUpgrade_Adv_LW:1": "FreeKillUpgrade_Adv:1",
     "_FreeKillUpgrade_Sup_LW:1": "FreeKillUpgrade_Sup:1",
+    "_Skirmisher_LWRank": "SkirmisherRank",
+    "_Reaper_LWRank": "ReaperRank",
+    "_Templar_LWRank": "TemplarRank",
+    "_Spark_LWRank": "SparkRank",
 }
 
 # For defining the order rules are applied in (in case of set_rule)
@@ -35,18 +67,6 @@ rule_priority = 0.0
 
 # Handle mod options here
 def generate_early(world: "X2WOTCWorld"):
-
-    # Ranksanity not supported
-    for loc_name, loc_data in world.loc_manager.location_table.items():
-        if loc_data.type == "SoldierRank":
-            world.loc_manager.disable_location(loc_name)
-    for item_name, item_data in world.item_manager.item_table.items():
-        if item_data.type == "Promotion":
-            world.item_manager.disable_item(item_name)
-    if world.options.rank_sanity != "none" or world.options.global_promotions:
-        world.options.rank_sanity.value = world.options.rank_sanity.option_none
-        world.options.global_promotions.value = False
-        warning(f"X2WOTC: Ignoring ranksanity for player {world.player_name} because the mod 'Long War of the Chosen' is enabled")
 
     # Mission skips not supported
     if world.options.skip_mission_types:
@@ -124,6 +144,21 @@ def generate_early(world: "X2WOTCWorld"):
     world.loc_manager.disable_location("UseExperimentalGrenadeMk2")
     world.loc_manager.disable_location("UseExperimentalHeavyWeapon")
     world.loc_manager.disable_location("UseExperimentalPoweredWeapon")
+
+    # Base game classes are disabled
+    for soldier_class in [
+        "Ranger",
+        "Grenadier",
+        "Specialist",
+        "Sharpshooter",
+        "Reaper",
+        "Skirmisher",
+        "Templar",
+        "SPARK",
+    ]:
+        for rank in range(2, 8):
+            world.loc_manager.disable_location(f"{soldier_class.title()}Rank{rank}")
+            world.item_manager.remove_item(f"{soldier_class.title()}Rank")
 
     # Force Level increases by off-world reinforcements which requires special handling
     world.item_manager.trap_items.discard("ForceLevel:1")
@@ -408,5 +443,41 @@ config: dict[str, str] = {
         +CheckUseItemExcludeAbilities=Gunslinger
         +CheckUseItemIncludeAbilities=GunslingerShot
         """
-    )
+    ),
+    "WOTCArchipelago_Ranksanity": dedent(
+        r"""
+        +DisabledDataEntries=DefaultRanger
+        +DisabledDataEntries=DefaultGrenadier
+        +DisabledDataEntries=DefaultSpecialist
+        +DisabledDataEntries=DefaultSharpshooter
+        +DisabledDataEntries=DefaultSkirmisher
+        +DisabledDataEntries=DefaultReaper
+        +DisabledDataEntries=DefaultTemplar
+        +DisabledDataEntries=DefaultSpark
+        +RanksanityData=(ID=LWOTCAssault, SoldierClass=LWS_Assault, \\
+        Ranks[0]=2, Ranks[1]=3, Ranks[2]=4, Ranks[3]=5, Ranks[4]=6, Ranks[5]=7, Ranks[6]=8)
+        +RanksanityData=(ID=LWOTCGrenadier, SoldierClass=LWS_Grenadier, \\
+        Ranks[0]=2, Ranks[1]=3, Ranks[2]=4, Ranks[3]=5, Ranks[4]=6, Ranks[5]=7, Ranks[6]=8)
+        +RanksanityData=(ID=LWOTCGunner, SoldierClass=LWS_Gunner, \\
+        Ranks[0]=2, Ranks[1]=3, Ranks[2]=4, Ranks[3]=5, Ranks[4]=6, Ranks[5]=7, Ranks[6]=8)
+        +RanksanityData=(ID=LWOTCRanger, SoldierClass=LWS_Ranger, \\
+        Ranks[0]=2, Ranks[1]=3, Ranks[2]=4, Ranks[3]=5, Ranks[4]=6, Ranks[5]=7, Ranks[6]=8)
+        +RanksanityData=(ID=LWOTCSharpshooter, SoldierClass=LWS_Sharpshooter, \\
+        Ranks[0]=2, Ranks[1]=3, Ranks[2]=4, Ranks[3]=5, Ranks[4]=6, Ranks[5]=7, Ranks[6]=8)
+        +RanksanityData=(ID=LWOTCShinobi, SoldierClass=LWS_Shinobi, \\
+        Ranks[0]=2, Ranks[1]=3, Ranks[2]=4, Ranks[3]=5, Ranks[4]=6, Ranks[5]=7, Ranks[6]=8)
+        +RanksanityData=(ID=LWOTCSpecialist, SoldierClass=LWS_Specialist, \\
+        Ranks[0]=2, Ranks[1]=3, Ranks[2]=4, Ranks[3]=5, Ranks[4]=6, Ranks[5]=7, Ranks[6]=8)
+        +RanksanityData=(ID=LWOTCTechnical, SoldierClass=LWS_Technical, \\
+        Ranks[0]=2, Ranks[1]=3, Ranks[2]=4, Ranks[3]=5, Ranks[4]=6, Ranks[5]=7, Ranks[6]=8)
+        +RanksanityData=(ID=LWOTCReaper, SoldierClass=Reaper, \\
+        Ranks[0]=2, Ranks[1]=3, Ranks[2]=4, Ranks[3]=5, Ranks[4]=6, Ranks[5]=7, Ranks[6]=8)
+        +RanksanityData=(ID=LWOTCSkirmisher, SoldierClass=Skirmisher, \\
+        Ranks[0]=2, Ranks[1]=3, Ranks[2]=4, Ranks[3]=5, Ranks[4]=6, Ranks[5]=7, Ranks[6]=8)
+        +RanksanityData=(ID=LWOTCTemplar, SoldierClass=Templar, \\
+        Ranks[0]=2, Ranks[1]=3, Ranks[2]=4, Ranks[3]=5, Ranks[4]=6, Ranks[5]=7, Ranks[6]=8)
+        +RanksanityData=(ID=LWOTCSpark, SoldierClass=Spark, \\
+        Ranks[0]=2, Ranks[1]=3, Ranks[2]=4, Ranks[3]=5, Ranks[4]=6, Ranks[5]=7, Ranks[6]=8)
+        """
+    ),
 }
