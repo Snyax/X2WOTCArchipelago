@@ -41,18 +41,17 @@ loc_id_to_key = {
 # Location groups
 loc_groups: dict[str, set[str]] = defaultdict(set)
 for loc_data in location_table.values():
-    if loc_data.id and loc_data.type != "ExampleType":
-        # Type
-        loc_groups[loc_data.type].add(loc_data.display_name)
-        # DLC
-        if loc_data.dlc:
-            loc_groups[loc_data.dlc].add(loc_data.display_name)
-        # Tags
-        for tag in loc_data.tags:
-            if ":" not in tag:
-                # Convert snake_case tag to PascalCase
-                tag = "".join(word.capitalize() for word in tag.split("_"))
-                loc_groups[tag].add(loc_data.display_name)
+    # Type
+    loc_groups[loc_data.type].add(loc_data.display_name)
+    # DLC
+    if loc_data.dlc:
+        loc_groups[loc_data.dlc].add(loc_data.display_name)
+    # Tags
+    for tag in loc_data.tags:
+        if ":" not in tag:
+            # Convert snake_case tag to PascalCase
+            tag = "".join(word.capitalize() for word in tag.split("_"))
+            loc_groups[tag].add(loc_data.display_name)
 
 
 class LocationManager:

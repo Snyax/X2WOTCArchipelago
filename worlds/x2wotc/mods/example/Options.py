@@ -8,5 +8,5 @@ class ExampleModOption(Toggle):
 
 
 options = [
-    # ("example_mod_option", ExampleModOption),
+    ("example_mod_option", ExampleModOption),
 ]

@@ -59,17 +59,16 @@ item_id_to_key = {
 # Item groups
 item_groups: dict[str, set[str]] = defaultdict(set)
 for item_data in item_table.values():
-    if item_data.id and item_data.type != "ExampleType":
-        # Type
-        item_groups[item_data.type].add(item_data.display_name)
-        # DLC
-        if item_data.dlc:
-            item_groups[item_data.dlc].add(item_data.display_name)
-        # Tags
-        for tag in item_data.tags:
-            # Convert snake_case tag to PascalCase
-            tag = "".join(word.capitalize() for word in tag.split("_"))
-            item_groups[tag].add(item_data.display_name)
+    # Type
+    item_groups[item_data.type].add(item_data.display_name)
+    # DLC
+    if item_data.dlc:
+        item_groups[item_data.dlc].add(item_data.display_name)
+    # Tags
+    for tag in item_data.tags:
+        # Convert snake_case tag to PascalCase
+        tag = "".join(word.capitalize() for word in tag.split("_"))
+        item_groups[tag].add(item_data.display_name)
 
 
 class ItemManager:

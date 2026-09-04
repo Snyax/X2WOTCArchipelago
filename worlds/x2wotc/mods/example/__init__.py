@@ -17,9 +17,9 @@ rule_priority = 0.0
 
 # Handle mod options here
 def generate_early(world: "X2WOTCWorld"):
-    # if world.options.example_mod_option:
-    #     world.loc_manager.disable_location("ExampleModLocation")
-    #     world.item_manager.disable_item("ExampleModItem")
+    if world.options.example_mod_option:
+        world.loc_manager.disable_location("ExampleModLocation")
+        world.item_manager.disable_item("ExampleModItem")
 
     # Add keys to filler item pool
     world.item_manager.resource_items.update(resource_items)

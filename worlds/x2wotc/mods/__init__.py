@@ -39,17 +39,21 @@ for loader, module_name, ispkg in pkgutil.iter_modules(__path__):
         warning(f"X2WOTC: Failed to import module mods/{module_name}, {e}")
         continue
 
+    # Ignore example mod
+    if module_name == "example":
+        continue
+
     mods_data.append(X2WOTCModData(
-        name = module.name if hasattr(module, "name") else module_name,
-        rule_priority = module.rule_priority if hasattr(module, "rule_priority") else 0,
-        items = module.items if hasattr(module, "items") else {},
-        item_map = module.item_map if hasattr(module, "item_map") else {},
-        locations = module.locations if hasattr(module, "locations") else {},
-        location_map = module.location_map if hasattr(module, "location_map") else {},
-        set_rules = module.set_rules if hasattr(module, "set_rules") else None,
-        options = module.options if hasattr(module, "options") else [],
-        generate_early = module.generate_early if hasattr(module, "generate_early") else None,
-        config = module.config if hasattr(module, "config") else {}
+        name = getattr(module, "name", module_name),
+        rule_priority = getattr(module, "rule_priority", 0.0),
+        items = getattr(module, "items", {}),
+        item_map = getattr(module, "item_map", {}),
+        locations = getattr(module, "locations", {}),
+        location_map = getattr(module, "location_map", {}),
+        set_rules = getattr(module, "set_rules", None),
+        options = getattr(module, "options", []),
+        generate_early = getattr(module, "generate_early", None),
+        config = getattr(module, "config", {})
     ))
 
 # Sort mods by rule priority
