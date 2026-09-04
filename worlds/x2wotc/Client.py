@@ -1,7 +1,7 @@
 import asyncio
 import os
 import re
-from typing import Any, TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 import zipfile
 
 from CommonClient import gui_enabled, logger
