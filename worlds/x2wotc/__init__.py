@@ -88,13 +88,21 @@ class X2WOTCWorld(World):
         # Extract slot data for UT re-gen
         re_gen_passthrough = getattr(self.multiworld, "re_gen_passthrough", {})
         if re_gen_passthrough and self.game in re_gen_passthrough:
-            slot_data = re_gen_passthrough[self.game]
+            slot_data: dict[str, Any] = re_gen_passthrough[self.game]
             for option_name in self.option_names:
                 if option_name in slot_data:
                     getattr(self.options, option_name).value = slot_data[option_name]
 
             # Enemy rando
             self.enemy_rando_manager.set_enemy_shuffle(slot_data["enemy_shuffle"])
+
+            # Replaced item/location data
+            replaced_item_data: dict[str, Any] = slot_data.get("replaced_item_data", {})
+            for item_name, kwargs in replaced_item_data.items():
+                self.item_manager.replace(item_name, **kwargs)
+            replaced_loc_data: dict[str, Any] = slot_data.get("replaced_loc_data", {})
+            for loc_name, kwargs in replaced_loc_data.items():
+                self.loc_manager.replace(loc_name, **kwargs)
 
         # Disable inactive mods
         for mod_data in mods_data:
