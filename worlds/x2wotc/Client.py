@@ -150,7 +150,8 @@ class X2WOTCCommandProcessor(ClientCommandProcessor):
         return True
 
     def _cmd_install_mod(self) -> bool:
-        """Install an APWorld mod"""
+        """Install an APWorld mod; never install files from untrusted sources
+        or without prior inspection, as they may contain arbitrary Python code"""
         mod_path = open_filename("Select mod file", [("x2wotc mod", [".py", ".zip"])])
         if not mod_path:
             self.output("No file selected.")
@@ -176,7 +177,7 @@ class X2WOTCCommandProcessor(ClientCommandProcessor):
         return True
 
     def _cmd_clear_mods(self) -> bool:
-        """Uninstall all APWorld mods"""
+        """Uninstall all APWorld mods, including those originally bundled with the release"""
         apworld_path = f"{__file__.split(".apworld")[0]}.apworld"
         temp_path = f"{apworld_path}.tmp"
 
