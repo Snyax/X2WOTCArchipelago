@@ -1255,23 +1255,70 @@ engineer_items: dict[str, X2WOTCItemData] = {
 ##                                                TRAP ITEMS                                                          ##
 ########################################################################################################################
 
-doom_items: dict[str, X2WOTCItemData] = {
+strategy_trap_items: dict[str, X2WOTCItemData] = {
     "Doom:1": X2WOTCItemData(
-        display_name = TRAP_ITEM_PREFIX + "Avatar Project +1",
+        display_name = TRAP_ITEM_PREFIX + "Avatar Project",
         id = get_new_item_id(),
         classification = IC.trap,
         type = "Trap",
-        tags = {"doom"}
+        tags = {}
+    ),
+    "HideBlackMarket:3": X2WOTCItemData(
+        display_name = TRAP_ITEM_PREFIX + "Market Gap",
+        id = get_new_item_id(),
+        classification = IC.trap,
+        type = "Trap",
+        tags = {}
+    ),
+    "YapCentral:5": X2WOTCItemData(
+        display_name = TRAP_ITEM_PREFIX + "Yap Central",
+        id = get_new_item_id(),
+        classification = IC.trap,
+        type = "Trap",
+        tags = {}
     ),
 }
 
-force_level_items: dict[str, X2WOTCItemData] = {
-    "ForceLevel:1": X2WOTCItemData(
-        display_name = TRAP_ITEM_PREFIX + "Force Level +1",
+tactical_trap_items: dict[str, X2WOTCItemData] = {
+    "AdventReinforcement": X2WOTCItemData(
+        display_name = TRAP_ITEM_PREFIX + "ADVENT Reinforcements",
         id = get_new_item_id(),
         classification = IC.trap,
+        layer = "Tactical",
         type = "Trap",
-        tags = {"force_level"}
+        tags = {"reinforcements"}
+    ),
+    "AlienReinforcement": X2WOTCItemData(
+        display_name = TRAP_ITEM_PREFIX + "Alien Reinforcements",
+        id = get_new_item_id(),
+        classification = IC.trap,
+        layer = "Tactical",
+        type = "Trap",
+        tags = {"reinforcements"}
+    ),
+    "NoAmmo": X2WOTCItemData(
+        display_name = TRAP_ITEM_PREFIX + "Out of Ammo",
+        id = get_new_item_id(),
+        classification = IC.trap,
+        layer = "Tactical",
+        type = "Trap",
+        tags = {}
+    ),
+    "MassPanic": X2WOTCItemData(
+        display_name = TRAP_ITEM_PREFIX + "Mass Panic",
+        id = get_new_item_id(),
+        classification = IC.trap,
+        layer = "Tactical",
+        type = "Trap",
+        tags = {}
+    ),
+    "Earthquake": X2WOTCItemData(
+        display_name = TRAP_ITEM_PREFIX + "Earthquake",
+        id = get_new_item_id(),
+        classification = IC.trap,
+        layer = "Tactical",
+        type = "Trap",
+        tags = {}
     ),
 }
 
@@ -1370,8 +1417,8 @@ filler_item_table: dict[str, X2WOTCItemData] = {
 }
 
 trap_item_table: dict[str, X2WOTCItemData] = {
-    **doom_items,
-    **force_level_items,
+    **strategy_trap_items,
+    **tactical_trap_items,
 }
 
 item_table: dict[str, X2WOTCItemData] = {

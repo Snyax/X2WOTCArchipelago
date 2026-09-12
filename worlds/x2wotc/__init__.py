@@ -112,6 +112,11 @@ class X2WOTCWorld(World):
                 for item_name, item_data in mod_data.items.items():
                     self.item_manager.disable_item(item_name)
 
+        # Disable inactive traps
+        for value, item in self.options.active_traps.value_to_item.items():
+            if value not in self.options.active_traps:
+                self.item_manager.trap_items.discard(item)
+
         # Disable contact techs
         # This always happens for now, while I haven't committed to MCO-ing XComHQ
         # (which currently seems like the only way to fix them)

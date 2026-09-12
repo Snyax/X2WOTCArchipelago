@@ -236,6 +236,25 @@ class TrapShare(Range):
     default = 0
 
 
+class ActiveTraps(OptionSet):
+    """Allow these traps to be shuffled into the item pool.
+    Valid values: 'DoomTrap', 'MarketTrap', 'YapTrap', 'ADVENTTrap',
+                  'AlienTrap', 'AmmoTrap', 'PanicTrap', 'EarthquakeTrap'"""
+    display_name = "Active Traps"
+    value_to_item = {
+        "DoomTrap": "Doom:1",
+        "MarketTrap": "HideBlackMarket:3",
+        "YapTrap": "YapCentral:5",
+        "ADVENTTrap": "AdventReinforcement",
+        "AlienTrap": "AlienReinforcement",
+        "AmmoTrap": "NoAmmo",
+        "PanicTrap": "MassPanic",
+        "EarthquakeTrap": "Earthquake",
+    }
+    valid_keys = frozenset(value_to_item.keys())
+    default = valid_keys
+
+
 class NothingShare(Range):
     """Set the share of filler items to be nothing."""
     display_name = "Nothing Share"
@@ -426,14 +445,14 @@ class ReplaceFactionHeroes(Toggle):
 
 
 class DisableDayOneTraps(Toggle):
-    """Disable traps received on (or before) the first day of a campaign.
+    """Disable traps received before the first day of a campaign.
     Can be changed in-game via Mod Config Menu."""
     display_name = "Disable Day One Traps"
     default = True
 
 
 class DisableTurnOneTraps(Toggle):
-    """Disable traps received on (or before) the first turn of a mission.
+    """Disable traps received before the first turn of a mission.
     Can be changed in-game via Mod Config Menu."""
     display_name = "Disable Turn One Traps"
     default = True
@@ -482,6 +501,7 @@ class X2WOTCOptions(PerGameCommonOptions):
     pcs_share: PCSShare
     staff_share: StaffShare
     trap_share: TrapShare
+    active_traps: ActiveTraps
     nothing_share: NothingShare
 
     # Randomization options
@@ -557,6 +577,7 @@ x2wotc_option_groups: list[OptionGroup] = [
             PCSShare,
             StaffShare,
             TrapShare,
+            ActiveTraps,
             NothingShare,
         ]
     ),
